@@ -5,5 +5,14 @@ int main(){
 	char name[50];
 	name = "Abdullah Khan";
 	printf("My name is: %s",name);
+	int array[5];
+	array = {20,30,50,10,5};
+	int max = 0;
+	for(int i = 0; i < 5; i++){
+		if(array[i] > max){
+			max = array[i];
+		}}
+	printf("Max is: %d",max);
+
 	return 0;
 }
