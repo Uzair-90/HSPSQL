@@ -13,6 +13,11 @@ int main(){
 			max = array[i];
 		}}
 	printf("Max is: %d",max);
+	int min = array[0];
+
+	for( int i = 0; i < 5; i++){ if(min < array[i]) { min = array[i];}}
+	printf("The min is: %d",min);
+
 
 	return 0;
 }
