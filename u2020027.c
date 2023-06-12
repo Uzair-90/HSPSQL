@@ -17,7 +17,6 @@ int main(){
 
 	for( int i = 0; i < 5; i++){ if(min < array[i]) { min = array[i];}}
 	printf("The min is: %d",min);
-
-
+	printf("The conflict is about to happen");
 	return 0;
 }
