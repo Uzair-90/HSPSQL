@@ -2,23 +2,20 @@
 
 int main(){
 
-	char name[50];
-	name = "Abdullah Khan";
-	printf("My name is: %s",name);
-	int array[5];
-	array = {20,30,50,10,5};
+	char name[50] = "Abdullah Khan";
+	printf("My name is: %s\n",name);
+	int array[] = {20,30,50,10,5};
 	int max = 0;
 	for(int i = 0; i < 5; i++){
 		if(array[i] > max){
 			max = array[i];
 		}}
-	printf("Max is: %d",max);
+	printf("Max is: %d\n",max);
 	int min = array[0];
 
-	for( int i = 0; i < 5; i++){ if(min < array[i]) { min = array[i];}}
-	printf("The min is: %d",min);
+	for( int i = 0; i < 5; i++){ if(min > array[i]) { min = array[i];}}
+	printf("The min is: %d\n",min);
 
-	printf("The conflict is about to happen");
-	printf("I am just testing merge conflicts");
+
 	return 0;
 }
