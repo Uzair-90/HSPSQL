@@ -1,0 +1,30 @@
+Duration:
+========
+- 2 months (excluding 1 week Eid holiday)
+
+Tasks:
+=====
+Implmentation:
+----
+- Learn C
+- Implment a simple DB (https://cstack.github.io/db_tutorial/)
+
+Postgres:
+--------
+- Install a postgres instance with data.
+- Scripts to query/insert/delete data
+
+Distributed:
+-----------
+- An intro survey of issues involved in DB horizantal scaling
+
+Courses:
+-------
+- DB course on Coursera
+- Distributed systems course on Coursera [Optional]
+
+Deliverables:
+============
+- Database implemented in C
+- Scrips to query/insert/delete data in Postgres instance
+- A report detailing internship activities and suryve of horizantal scaling issues
