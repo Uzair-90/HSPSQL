@@ -1,0 +1,96 @@
+read page number 40 of the book there will be an example read the example carefully and you will see some important things about conversion specifiers.
+
+Some of the most common used conversion specifiers are discussed below:
+
+1) %d this will the variable with minimum amount of space (means least amount of characters).
+
+2) %5d  this will display the variable with a minimum of 5 characters.
+
+3) %-5d this will display the variable with a minimum of 5 characters but left justified.
+
+4) %5.3d this will display the variable with a minimum of 3 and a maximum of 5 characters.
+
+5) %10.3f this will display the variable with a fix size of 10 characters and three points after the decimal place.
+
+6) %10.3e this will display the variable in exponential form with 10 characters overall and three places after the decimal point.
+
+example illustration of 6:
+	
+		float x = 839.21f;
+		printf("%10.3e",x);
+
+	RESULT:
+
+		--------8.392e+02
+
+7) %10g this will display the variable in either decimal or exponential form using 10 characters overall.
+
+Escape Sequence:
+	\n
+	\t
+	\a
+This type of occurance is known as escape sequence whether you want to go on next line or want a tab or something like that.
+
+(\") this escape sequence is used when you want to print print double quotes as it as in the output.
+
+Example:
+ 			"\"Hello World!\""
+RESULT:
+			"Hello World!"
+
+To print a \ operator as a string you must put it twice because a single will be considered as escape sequence like:
+
+printf("\");
+ 
+ The above line will not print anything or will cause an error.
+
+ You must write something like:
+
+printf("\\");
+
+This will print:
+	\
+
+Scanf:
+
+Scanf is used for input purpose it is a sequence matching function it takes the input match it with the provided datatype and ignore the white and blank spaces while reading the input from the user-end.
+
+While reading an integer the function first lookup for a plus or minus sign and after that it look for a digit and keep looking until it finds a nondigit.
+
+While reading a float it first look for + or - sign and then keep looking for digits and a decimal point or exponential sign.
+
+%f,%e or %g can be used interchangebally for float reading in scanf.
+
+Inputer termination:
+
+consider the following line of code:
+
+scanf("%d,%d",&i,&j);
+
+in the above line of code scanf will put i into %d and then it will looking for a comma but if doesn't find any comma it will terminate the function without any furthure looking.
+
+Fractions using scanf:
+
+If the user have to input a fraction we don't need to take numerator or denomirator seperately we can take both of them at once in scanf like below:
+
+
+int numerator = 0;
+int denumerator = 0;
+printf("Enter the fraction: ");
+scanf("%d/%d",&numerator,&denumerator);
+
+this will take the user input at once as a fraction.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
