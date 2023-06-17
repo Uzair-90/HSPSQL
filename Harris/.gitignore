@@ -1,3 +1,6 @@
-/Harris/**/*.exe
-/Harris/**/tempCodeRunnerFile.c
-/Harris/**/null
+/**/*.exe
+/**/tempCodeRunnerFile.c
+/**/null
+*.exe
+tempCodeRunnerFile.c
+null
