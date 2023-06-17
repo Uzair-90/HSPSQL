@@ -1,3 +1,6 @@
 /Harris/**/*.exe
 /Harris/**/tempCodeRunnerFile.c
 /Harris/**/null
+/Harris/null
+/Harris/*.exe
+/Harris/tempCodeRunnerFile.c
