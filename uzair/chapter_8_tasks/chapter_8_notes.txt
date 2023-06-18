@@ -1,0 +1,118 @@
+Array is useed to store multiple items of same datatype.
+An array works like a vector.
+
+initialization of array:
+
+first give it a size and the you can give the values at once like:
+
+#define N 5
+
+int main(){
+	int array[N] = {1,2,3,4,5};
+}
+
+You can also intialize array without specifying the size at the start like:
+
+int array = {1,2,3,4,5};
+
+In this case the size of the array will still be fixed that is 5.
+
+Array designators:
+
+If you want to initialize specific indices of array at the time of declaraion you can do it using array designators like:
+
+int array[50] = {[13]=4,[41]=9};
+
+this will initialize the values at index 13 with a value of 4 and 9 at index 41 and rest of the values will be assigned 0.
+
+We can also use array designators in array without specifying the size of the array in this case the compiler will decide the size of the array from the largest designator like:
+
+int array[]= {[4]=9,[33]=51};
+
+from the above statement it is clear that the largest designator is 33 so the array will have a size of 34.
+
+Size of operator with array:
+
+sizeof operator can be used to find the type array as well as size like:
+
+sizeof(a[0]);
+
+Thie statement will give you the size of first element from which you will know what is the type of array or size of elements in array.
+
+If you want to know the size of an array just divide sizeof array by first element of array like:
+
+int N = sizeof(a)/sizeof(a[0]);
+
+from this you will know the size of array.
+
+
+8.2 Multidimensional arrays:
+
+Multidimesional arrays are like matrices where first signle dimension array represents number of rows and the second represents number of coloumns.
+
+It is like:
+
+int a[3][3];
+
+This statement will declare a two dimensional array with 3 rows and three columns to access an element in the array you will have to specify the location by number of row and coloumn like if I want to get element 0 from the array it will be:
+
+a[0][0];
+
+The above statement shows that 0th row and 0th column this is a signle location where my integer is stored.
+
+As sigle for loop is used to access one dimensional array a nested for loop is used to access a two dimensional array.
+
+Two initialize a two dimensional array it will be:
+
+array[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+
+if all of the elements of each row are not known we can write it as:
+
+array[3][3] = {{1,2},{4},{7}};
+
+The rest of the elements will be assigned 0.
+
+During initialization we can also ommit the inner braces like:
+
+array[3][3] = {1,2,3,4,5,6,7,8,9};
+
+
+Const arrays:
+
+Any array that is one dimensional or two dimensional can be made contant using the word const like:
+
+const char array_ch[2][2] = {'\\','&','^','#'};
+
+The values of the array_ch will not be allowed for modification.
+
+8.3 Variable length array:
+
+In this case we don't need to specify the size at the start we can take a value from the user and make an array of that size like if we want the user how many seats do you want make in a car just a dummy example:
+
+#include<stdio.h>
+
+int main(){
+	int num_seats = 0;
+	printf("How many seats do you want in your car: ");
+	scanf("%d",&num_seats);
+
+	bool car_seats[num_seats] = {false};
+}
+
+in the above programme we asked user to input the size of array. We didn't had to initialize the array at the start these kind of arrays are known as VLA of variable length arrays.
+
+They can have significant uses.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
