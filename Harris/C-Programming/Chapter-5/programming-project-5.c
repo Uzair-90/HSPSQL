@@ -6,6 +6,7 @@ int main(void)
 
     printf("Enter taxable income: ");
     scanf("%d", &income);
+    
     if (income <= 750)
         printf("Amount of tax is: %.2f", income * 0.01);
     else if (income <= 2250)
