@@ -6,14 +6,12 @@ int main(void)
     int high_score = 0, low_score = 0;
     float avg_score = 0.0f;
 
-    /* Populate 5 x 5 array */
     for (row = 0; row < 5; row++) {
         printf("Enter 5 Quiz scores for Student %d :", row + 1);
         scanf("%d %d %d %d %d", &arr[row][0], &arr[row][1], 
                 &arr[row][2], &arr[row][3], &arr[row][4]);
     }
 
-    /* Calculate student scores*/
     printf("\n*Total scores*\n");
     for (row = 0; row < 5; row++) {
         score = 0;
@@ -24,7 +22,6 @@ int main(void)
         printf("%d\n", score);
     }
 
-    /* Calculate quiz stats */
     for (col = 0; col < 5; col++) {
         avg_score = 0.0f;
         high_score = 0;
@@ -43,6 +40,3 @@ int main(void)
 
     return 0;
 }
-
-    
-    
