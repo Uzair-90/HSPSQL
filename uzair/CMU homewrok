@@ -1,0 +1,243 @@
+
+Ans 2):
+
+SELECT
+    startyear || '|' || primarytitle || ' (' || originaltitle || ')' AS movie_details
+FROM
+    title_basics
+WHERE
+    titletype = 'movie' -- Consider only movies
+    AND genres @> ARRAY['Action'] -- Check if Action is one of the genres
+    AND primarytitle <> originaltitle -- Filter out movies with the same primary and original title
+ORDER BY
+    startyear DESC, primarytitle -- Sort by startyear in descending order, then by primarytitle in ascending order
+LIMIT 10;
+
+
+Ans 3):
+
+SELECT
+    primarytitle || '|' || (COALESCE(endyear, 2023) - startyear) AS series_details
+FROM
+    title_basics
+WHERE
+    titletype = 'tvSeries' -- Consider only TV series
+    AND startyear IS NOT NULL -- Exclude TV series without a premiered year
+ORDER BY
+    (COALESCE(endyear, 2023) - startyear) DESC, primarytitle -- Sort by years running in descending order, then by primarytitle in ascending order
+LIMIT 20;
+
+
+Ans 4):
+
+SELECT
+    CONCAT(
+        CONCAT((birth_decade - 1) * 10, 's'),
+        '|',
+        COUNT(*) AS num_directors
+    )
+FROM (
+    SELECT
+        FLOOR(birthyear / 10) AS birth_decade
+    FROM
+        name_basics
+    WHERE
+        birthyear >= 1900 -- Consider directors born since 1900
+        AND birthyear IS NOT NULL -- Exclude directors without a birth year
+) AS subquery
+GROUP BY
+    birth_decade
+ORDER BY
+    birth_decade;
+
+
+Ans 5):
+
+SELECT
+    tb.titletype,
+    ROUND(AVG(tr.averagerating)::numeric, 2) AS avg_rating,
+    MIN(tr.averagerating) AS min_rating,
+    MAX(tr.averagerating) AS max_rating
+FROM
+    title_basics tb
+    JOIN title_ratings tr ON tb.tconst = tr.tconst
+    JOIN title_akas ta ON tb.tconst = ta.titleid
+WHERE
+    ta.title = tb.originaltitle -- Match German titles
+    AND ta.types IN ('imdbDisplay', 'original') -- Consider akas types imdbDisplay or original
+GROUP BY
+    tb.titletype
+ORDER BY
+    avg_rating DESC;
+
+
+Ans 6): 
+
+SELECT
+    nb.primaryname,
+    ROUND(AVG(tr.averagerating)::numeric, 2) AS avg_rating
+FROM
+    name_basics nb
+    JOIN title_principals tp ON nb.nconst = tp.nconst
+    JOIN title_ratings tr ON tp.tconst = tr.tconst
+WHERE
+    nb.primaryname IN (
+        SELECT
+            nb.primaryname
+        FROM
+            name_basics nb
+            JOIN title_principals tp ON nb.nconst = tp.nconst
+            JOIN title_basics tb ON tp.tconst = tb.tconst
+        WHERE
+            tb.originaltitle = 'Batman'
+            AND tp.category = 'actor'
+    )
+GROUP BY
+    nb.primaryname
+ORDER BY
+    avg_rating DESC
+LIMIT 10;
+
+
+Ans 7):
+
+SELECT
+    COUNT(DISTINCT nb.nconst) AS total_actors
+FROM
+    name_basics nb
+    JOIN title_principals tp ON nb.nconst = tp.nconst
+    JOIN title_basics tb ON tp.tconst = tb.tconst
+WHERE
+    tb.originaltitle = 'The Prestige'
+    AND EXTRACT(YEAR FROM to_date(tb.premiered::text, 'YYYY')) = nb.birthyear
+    AND tp.category IN ('actor', 'actress');
+
+
+Ans 8):
+
+SELECT DISTINCT nb.primaryname
+FROM
+    name_basics nb
+    JOIN title_principals tp ON nb.nconst = tp.nconst
+    JOIN name_basics na ON tp.nconst = na.nconst
+WHERE
+    na.primaryname LIKE 'Rose%'
+    AND tp.category IN ('actor', 'actress')
+    AND nb.primaryprofession LIKE '%director%'
+ORDER BY nb.primaryname;
+
+
+Ans 9):
+
+WITH ranked_cast AS (
+    SELECT
+        np.nconst,
+        np.primaryname,
+        np.deathyear,
+        tp.category,
+        tb.tconst,
+        tb.primarytitle,
+        tb.runtimeminutes,
+        ROW_NUMBER() OVER (
+            PARTITION BY tp.category, np.nconst
+            ORDER BY np.deathyear NULLS LAST, tb.runtimeminutes DESC, tb.tconst
+        ) AS category_rank
+    FROM
+        name_basics np
+        JOIN title_principals tp ON np.nconst = tp.nconst
+        JOIN title_basics tb ON tp.tconst = tb.tconst
+    WHERE
+        tp.category IN ('actor', 'actress')
+        AND tb.runtimeminutes IS NOT NULL
+)
+SELECT
+    rc.category,
+    rc.primaryname AS name,
+    rc.deathyear,
+    rc.primarytitle AS longest_work_title,
+    rc.runtimeminutes AS work_runtime,
+    rc.category_rank
+FROM
+    ranked_cast rc
+WHERE
+    rc.category_rank <= 5
+ORDER BY
+    rc.category,
+    rc.deathyear NULLS LAST,
+    rc.primaryname,
+    rc.runtimeminutes DESC,
+    rc.tconst;
+
+Ans 10):
+
+WITH RECURSIVE character_list AS (
+    SELECT
+        tp.tconst,
+        tp.characters,
+        1 AS level
+    FROM
+        name_basics nb
+        JOIN title_principals tp ON nb.nconst = tp.nconst
+    WHERE
+        nb.primaryname = 'Leonardo DiCaprio'
+        AND nb.birthyear = 1974
+    UNION ALL
+    SELECT
+        tp.tconst,
+        substring(cl.characters, p + 2) AS characters,
+        cl.level + 1
+    FROM
+        character_list cl
+        CROSS JOIN LATERAL (
+            SELECT
+                position(',' IN cl.characters) AS p
+        ) AS subquery
+    WHERE
+        subquery.p > 0
+)
+SELECT
+    string_agg(DISTINCT characters, ',' ORDER BY characters) AS unique_characters
+FROM
+    character_list
+WHERE
+    characters NOT LIKE '%Self%'
+ORDER BY
+    unique_characters;
+WITH RECURSIVE character_list AS (
+    SELECT
+        tp.tconst,
+        tp.characters,
+        1 AS level
+    FROM
+        name_basics nb
+        JOIN title_principals tp ON nb.nconst = tp.nconst
+    WHERE
+        nb.primaryname = 'Leonardo DiCaprio'
+        AND nb.birthyear = 1974
+    UNION ALL
+    SELECT
+        tp.tconst,
+        substring(cl.characters, p + 2) AS characters,
+        cl.level + 1
+    FROM
+        character_list cl
+        CROSS JOIN LATERAL (
+            SELECT
+                position(',' IN cl.characters) AS p
+        ) AS subquery
+    WHERE
+        subquery.p > 0
+)
+SELECT
+    string_agg(DISTINCT characters, ',' ORDER BY characters) AS unique_characters
+FROM
+    character_list
+WHERE
+    characters NOT LIKE '%Self%'
+ORDER BY
+    unique_characters;
+
+
+
+
+
