@@ -12,7 +12,8 @@
   * [Berkley Cs61C (learn gbd)](https://inst.eecs.berkeley.edu/~cs61c/fa22/labs/lab01/)
     
 ### Misc.
-- [A simple hash table in C](https://news.ycombinator.com/item?id=36302552)  
+- [A simple hash table in C](https://news.ycombinator.com/item?id=36302552)
+- [A hash array-mapped trie in C](https://news.ycombinator.com/item?id=36672957)  
 
 
 ## Databases
