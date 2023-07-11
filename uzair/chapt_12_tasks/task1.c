@@ -1,24 +1,23 @@
 #include <stdio.h>
+#define max 100
 
-#define MAX_LEN 100
-
-int main(void) {
-    
-    char message[MAX_LEN];
-    char c, *p = message;
-
+int main() {
+    char message[max];
+    char *p = &message[0];
+    char ch;
     printf("Enter a message: ");
-
-    while ((c = getchar()) != '\n' && p < message + MAX_LEN)
-        *p++ = c;
-
+    while (ch != '\n') {
+        ch = getchar();
+        *p = ch;
+        p++;
+    }
+    
     p--;
-    printf("Reversal is: ");
-
-    while (p >= message)
-        putchar(*p--);
-
-    printf("\n");
-
+    
+    for (; p >= message; p--) {
+        printf("%c", *p);
+    }
+    
     return 0;
-}    
+}
+
