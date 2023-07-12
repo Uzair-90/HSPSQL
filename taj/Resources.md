@@ -23,6 +23,8 @@
 - [CMU 15-445/645 assignments](https://15445.courses.cs.cmu.edu/spring2023/assignments.html)  
 - [CMU 15-445/645 project base code repo](https://github.com/cmu-db/bustub)  
 
+[Building a DB from scratch in academia](https://news.ycombinator.com/item?id=36354981)
+
 ### [UoW CSEP544]
 - [UoW CSEP544 HW1](https://courses.cs.washington.edu/courses/csep544/15au/hw/hw1/hw1.html)  
 
@@ -30,6 +32,7 @@
 - [Build you own DB (in Golang)](https://news.ycombinator.com/item?id=35666598)  
 - [Let's build a simple DB (in C)](https://cstack.github.io/db_tutorial/)  
 
+[ClickHouse intern tasks](https://github.com/ClickHouse/ClickHouse/issues/42194)  
 
 ## Postgres
 
