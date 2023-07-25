@@ -30,7 +30,7 @@ int main()
             }
             else if (date1 == date2)
             {
-                printf("Dates are the same");
+                printf("Both dates are same.");
                 return 0;
             }
         } 
