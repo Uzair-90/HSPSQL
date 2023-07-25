@@ -1,29 +1,26 @@
 #include <stdio.h>
 
-int main(void)
+int main()
 {
-    int days, start_day, i, j;
+    int starting_day, days_in_a_month, i;
 
-    printf("\nEnter number of days in month: ");
-    scanf("%d", &days);
+    printf("Enter number of days in a month: ");
+    scanf("%d", &days_in_a_month);
+    printf("Starting day for the month (1 = Sunday, 6 = Saturday): ");
+    scanf("%d", &starting_day);
 
-    printf("Enter starting day of the week (1=Sun, 7=Sat): ");
-    scanf("%d", &start_day);
-    printf("\n");
-
-    /* prints the blank days of the first week */
-    for (i = 1; i < start_day; i++) {
+    printf("  S  M  T  W  T  F  S\n");
+    for (int j = 1; j < starting_day; j++) 
+    {
         printf("   ");
     }
- 
-    /* prints the calendar numbers */
-    for (j = 1; j <= days; i++, j++) {
-        printf("%3d", j);
-        if (i % 7 == 0)
-            printf("\n");
+    for (i = 1; i <= days_in_a_month; i++, starting_day++) {
+        if (starting_day % 7 == 0)
+            printf("%3d\n", i);
+        else {
+            printf("%3d", i);
+        }
     }
-    
-    printf("\n\n");
 
     return 0;
 }

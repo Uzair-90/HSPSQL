@@ -1,17 +1,18 @@
 #include <stdio.h>
 
-int main(void)
+int main()
 {
-    float number, largest = 0.0f;
+    float number, largest;
 
-    do {
-        printf("Enter a number (enter 0 to end): ");
+    do 
+    {
+        printf("Enter a number (0 or negative to exit): ");
         scanf("%f", &number);
         if (number > largest)
-            largest = number;
-    } while (number > 0.0f);
+            largest = number;      
+    } while (number > 0);
 
-    printf("\nThe largest number entered was %.2f\n\n", largest);
+    printf("Largest number is %.3f", largest);
 
     return 0;
 }
