@@ -1,0 +1,48 @@
+CHap 14 C pre processor:
+-C preprocessor comes under action before the actual compilation process.
+-not a part of c compiler.
+-it a text substitution tool.
+-All preprocessor commands begin with a hash symbol(#).
+
+eg: #include <stdio.h> : File inclusion contents of a specifies file to include programe
+#include <stdbool.h> 
+#define :             MACRO DEFINITION  #undef: removees a macro definition
+#include
+#undef
+#else #if #ifedef : COnditional complication
+
+MACROS: #define....>macros<......  may be identifiers, keywords ,numeric constants
+= in macro its show error eg
+#define N=100 error:
+macro helps programe easier to read
+can easily be modified
+
+# operator converts a macro argument into a string literal : is known as stringization.
+
+excercises
+Let DOUBLE be the following macro:
+
+#define DOUBLE(x) 2*x
+
+(a) What is the value of DOUBLE(1+2)? 2*1+2 = 4
+(b) What is the value of 4/DOUBLE(2)? 4/2*2 = 4
+(c) Fix the definition of DOUBLE:
+    #define DOUBLE(x) (2*(x))
+
+ex 4
+(b) #define AREA(x,y) (x) * (y)
+    problem:
+    sum = 5 / AREA(2,5);  preprocessor replacement: 5 / (2) * (5). Evalutes to 10
+    To fix we need parentheses around the replacement list
+    #define AREA(x,y) ((x) * (y))
+ex 12
+
+#define M 10
+
+Which of the following tests will fail?
+
+(a) #if M           succeed
+(b) #ifdef M        succeed
+(c) #ifndef M       fail
+(d) #if defined(M)  succeed
+(e) #if !defined(M) fail
