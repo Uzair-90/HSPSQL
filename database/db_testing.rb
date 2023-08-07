@@ -1,33 +1,50 @@
-require 'fiddle/import'
+describe 'database' do
+  before do
+    `rm -rf mydb.db`
+  end
 
-module Part3
-  extend Fiddle::Importer
-  dlload '/Users/khan/Desktop/database/part3.so' # Load the compiled C library (Ensure the correct path to part3.so)
+  def run_script(commands)
+    raw_output = nil
+    IO.popen("./part5 mydb.db", "r+") do |pipe|
+      commands.each do |command|
+        pipe.puts command
+      end
 
-  # Define the C functions here
-  extern 'void* new_table()'
-  extern 'void free_table(void*)'
-  extern 'int execute_statement(void*, void*)'
+      pipe.close_write
+
+      raw_output = pipe.gets(nil)
+    end
+    raw_output.split("\n")
+  end
+
+  it 'keeps data after closing connection' do
+    result1 = run_script([
+      "insert 1 user1 person1@example.com",
+      ".exit",
+    ])
+    expect(result1).to match_array([
+      "db > Executed.",
+      "db > ",
+    ])
+
+    result2 = run_script([
+      "select",
+      ".exit",
+    ])
+    expect(result2).to match_array([
+      "db > (1, user1, person1@example.com)",
+      "Executed.",
+      "db > ",
+    ])
+  end
+
+  it 'prints error message when table is full' do
+    script = (1..1401).map do |i|
+      "insert #{i} user#{i} person#{i}@example.com"
+    end
+    script << ".exit"
+
+    result = run_script(script)
+    expect(result[-2]).to eq("db > Error: Table full.")
+  end
 end
-
-def execute_statement_wrapper(statement, table)
-  Part3.execute_statement(statement, table)
-end
-
-# Test the code
-table = Part3.new_table
-
-# Insert a row
-statement = Fiddle::Pointer.malloc(4 + 32 + 255)  # Allocate memory for the statement
-statement[0, 4] = [0].pack('L')                   # Pack the 'id' field (uint32_t)
-statement[4, 32] = ["username"].pack('A32')       # Pack the 'username' field (32 characters)
-statement[36, 255] = ["user@example.com"].pack('A255')  # Pack the 'email' field (255 characters)
-
-execute_statement_wrapper(statement, table)
-
-
-
-# Clean up
-Part3.free_table(table)
-
-puts 'Test completed.'
