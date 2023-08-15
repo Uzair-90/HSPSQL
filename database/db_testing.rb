@@ -5,7 +5,7 @@ describe 'database' do
 
   def run_script(commands)
     raw_output = nil
-    IO.popen("./part9 mydb.db", "r+") do |pipe|
+    IO.popen("./part10 mydb.db", "r+") do |pipe|
       commands.each do |command|
         pipe.puts command
       end
@@ -38,15 +38,6 @@ describe 'database' do
     ])
   end
 
-  it 'prints error message when table is full' do
-    script = (1..1401).map do |i|
-      "insert #{i} user#{i} person#{i}@example.com"
-    end
-    script << ".exit"
-
-    result = run_script(script)
-    expect(result[-2]).to eq("db > Error: Table full.")
-  end
   it 'allows printing out the structure of a one-node btree' do
       script = [3, 1, 2].map { |i| "insert #{i} user#{i} person#{i}@example.com" }
       script << ".btree"
@@ -58,10 +49,10 @@ describe 'database' do
         "db > Executed.",
         "db > Executed.",
         "db > Tree:",
-        "leaf (size 3)",
-        "  - 0 : 1",
-        "  - 1 : 2",
-        "  - 2 : 3",
+        "- leaf (size 3)",
+        "  - 1",
+        "  - 2",
+        "  - 3",
         "db > "
       ])
     end
@@ -99,6 +90,40 @@ describe 'database' do
         "Executed.",
         "db > ",
       ])
+    end
+    it 'allows printing out the structure of a 3-leaf-node btree' do
+      script = (1..14).map do |i|
+        "insert #{i} user#{i} person#{i}@example.com"
+      end
+      script << ".btree"
+      script << "insert 15 user15 person15@example.com"
+      script << ".exit"
+      result = run_script(script)
+    
+      expected_output = [
+        "db > Tree:",
+        "- internal (size 1)",
+        "  - leaf (size 7)",
+        "    - 1",
+        "    - 2",
+        "    - 3",
+        "    - 4",
+        "    - 5",
+        "    - 6",
+        "    - 7",
+        "  - key 7",
+        "  - leaf (size 7)",
+        "    - 8",
+        "    - 9",
+        "    - 10",
+        "    - 11",
+        "    - 12",
+        "    - 13",
+        "    - 14",
+        "db > Need to implement searching an internal node",
+      ]
+    
+      expect(result[14...(result.length)]).to match_array(expected_output)
     end
     
   
