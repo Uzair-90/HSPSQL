@@ -5,7 +5,7 @@ describe 'database' do
 
   def run_script(commands)
     raw_output = nil
-    IO.popen("./part10 mydb.db", "r+") do |pipe|
+    IO.popen("./part11 mydb.db", "r+") do |pipe|
       commands.each do |command|
         pipe.puts command
       end
@@ -120,7 +120,8 @@ describe 'database' do
         "    - 12",
         "    - 13",
         "    - 14",
-        "db > Need to implement searching an internal node",
+        "db > Executed.",
+        "db > ",
       ]
     
       expect(result[14...(result.length)]).to match_array(expected_output)
