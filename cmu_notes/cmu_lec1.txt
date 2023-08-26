@@ -1,0 +1,16 @@
+select * from s union all select * from r;
+
+this above query will return the union of the two tabels s and r by removing all the duplicated.
+
+select * from s intersection select * from r;
+
+the above query will return the intersection of tables s and r.
+
+select * from s except select * from r;
+
+the above query will return s-r.
+
+select * from r cross join s; or select * from r,s;
+
+the above query means (r x s).
+
