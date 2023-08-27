@@ -14,3 +14,16 @@ select * from r cross join s; or select * from r,s;
 
 the above query means (r x s).
 
+Natural Join:
+
+to perform natural join in sql the syntax is as following:
+
+select * from s natural join r;
+
+data model:
+ 
+ 	A datamodel is a collection of concepts for describing the data in database.
+
+Schema: 
+
+	A schema is a description of a practical collection of data using a given model.
