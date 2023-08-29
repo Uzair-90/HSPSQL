@@ -1,0 +1,42 @@
+disk base architecture:
+
+the dbms assumes that the primary storage location of the database is non-volatile disk.
+
+the dbms's components manage to move data between volatile and non-volatile storage.
+
+ 					stogage hierarchy
+
+ 					cpu registers
+ 						 ||					Faster smaller and expensve
+ 						\||/				/\
+ 					cpu caches				||
+ 					 	 ||					||
+ Byte addressable		\||/				||
+ Volatile				DRAM				||
+------------------> 	 ||					||
+ Non-volatile			\||/				||
+Block Addressable 		SSD					||
+ 					 	 ||					||
+ 						\||/				||
+ 						HDD					||
+ 					 	 ||					||
+ 						\||/				||
+ 					NETWORK STORAGE			||
+
+
+In volatile memory we can randomly access any data by their address and even the exact byte.
+In non-volatile memory we cannot access the the memory directly but we can access the block
+or the exact page which containts the data inside the block or page of memory we will access
+data sequentially.
+
+
+
+
+
+
+
+
+
+
+
+
