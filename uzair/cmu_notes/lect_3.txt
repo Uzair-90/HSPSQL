@@ -4,24 +4,24 @@ the dbms assumes that the primary storage location of the database is non-volati
 
 the dbms's components manage to move data between volatile and non-volatile storage.
 
- 					stogage hierarchy
+ 					 					 					 					 					 					stogage hierarchy
 
- 					cpu registers
- 						 ||					Faster smaller and expensve
- 						\||/				/\
- 					cpu caches				||
- 					 	 ||					||
- Byte addressable		\||/				||
- Volatile				DRAM				||
-------------------> 	 ||					||
- Non-volatile			\||/				||
-Block Addressable 		SSD					||
- 					 	 ||					||
- 						\||/				||
- 						HDD					||
- 					 	 ||					||
- 						\||/				||
- 					NETWORK STORAGE			||
+ 					 					 					 					 					 					cpu registers
+ 						  					 					 					 					 					   ||					Faster smaller and expensve
+ 				 					 					 					 					 					   		\||/				/\
+ 		 					 					 					 					    			cpu caches				||
+ 					 					 					 					 					   					 	 ||					||
+ Byte addressable	 					 					 					 			\||/				||
+ Volatile	 					 					 					 					   			DRAM				||
+------------------> 	 					 					 					  ||					||
+ Non-volatile		 					 					 					 						\||/				||
+Block Addressable 	 					 					 					  	SSD					||
+ 					 	 					 					 					 					 					   ||					||
+ 		 					 					 					 					 					   				\||/				||
+ 		 					 					 					 					 					 						HDD					||
+ 		 					 					 					 					 					  			 	 ||					||
+ 	 					 					 					 					 					   					\||/				||
+ 	 					 					 					 									NETWORK STORAGE			||
 
 
 In volatile memory we can randomly access any data by their address and even the exact byte.
