@@ -54,7 +54,8 @@ Decomposition Storage Model (DSM):
 Ideal for olap workloads where raed-only queries perform large scans over the subsets
 of the table's attributes.
 
-Tuple identification in a columnar storage model involves mapping the columnar data back to its original row-based representation. This process is crucial when you need 
+Tuple identification in a columnar storage model involves mapping the columnar data 
+back to its original row-based representation. This process is crucial when you need 
 to retrieve complete rows of data, perform updates, or support general transactional 
 operations. Here are a few ways tuple identification can be approached in a decomposed 
 storage model:

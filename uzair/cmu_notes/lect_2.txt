@@ -6,14 +6,17 @@ relational languages:
 	data definition languages (DDL)
 	data control languages (DCL)
 
-sql is based on bag algebra that contain duplicates not on set algebra that don't contain duplicates.
+sql is based on bag algebra that contain duplicates not on set algebra that don't 
+contain duplicates.
 
 there are three sorts of data collection:
  
  	lists:
- 		It can have duplications with a defined order where you can append data and also pop data.
+ 		It can have duplications with a defined order where you can append data and 
+        also pop data.
  	Sets:
  		It doesn't have a defined order but it also don't have any duplications.
+
  	 Bages:
  	 	It also don't have an order but it can allow duplicates.
 
@@ -41,7 +44,8 @@ Aggregates:
 	Sum(col)
 	count(col)
 
-for example using count to return the number of students form login col where they are @cs:
+for example using count to return the number of students form login col where they are
+ @cs:
 
 		select count(login) as cnt from students where login like '@cs';
 							or
@@ -60,27 +64,37 @@ get the number of unique students means no duplications where login is @cs:
 
 select the average gpa from students table enrolled in each course from enrolled table:
 
-	select avg(s.gpa), e.cid from enrolled as e, students as s where e.sid = s.sid group by e.cid;
+	select avg(s.gpa), e.cid from enrolled as e, students as s where e.sid = s.sid 
+    group by e.cid;
 
-	This will select the average of students enrolled in each course and will group them or arrange them them by cid in enrolled table.
+	This will select the average of students enrolled in each course and will group 
+    them or arrange them them by cid in enrolled table.
 
 
 non-aggregated values in select output clause must appear in group by clause like:
 
-		select avg(s.gpa), e.cid, s.name from enrolled as e, students as s where e.sid = s.sid group by e.cid,s.name;
+		select avg(s.gpa), e.cid, s.name from enrolled as e, students as s where e.sid
+         = s.sid group by e.cid,s.name;
 
 
 Having clause:
 
-If you want to filter your data after aggregation then you must use having clause with gourpby like:
+If you want to filter your data after aggregation then you must use having clause with
+ gourpby like:
 
-			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s where e.sid = s.sid and avg_gpa > 3.9 group by e.cid;
+			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
+            where e.sid = s.sid and avg_gpa > 3.9 group by e.cid;
 
-			this query is not correct and will produce undefined behaviour because here you are trying to filter data with something that is not calculated yet which is avg_gpa. So the correct way to do this will be:
+			this query is not correct and will produce undefined behaviour because 
+            here you are trying to filter data with something that is not calculated 
+            yet which is avg_gpa. So the correct way to do this will be:
 
-			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s where e.sid = s.sid group by e.cid having avg_gpa > 3.9;
+			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
+            where e.sid = s.sid group by e.cid having avg_gpa > 3.9;
 
-			Now the above query will first calculate avg_gpa and then it will filter your data which is the correct way to do it.
+			Now the above query will first calculate avg_gpa and then it will filter 
+
+            your data which is the correct way to do it.
 
 
 String operations:
@@ -188,7 +202,8 @@ there are rules for it that are:
 2) table will have the same number of columns with the same types as the input.
 
 
-let us suppose you have a table enrolled with many records and you want to store its distinct types into a new table here is a query.
+let us suppose you have a table enrolled with many records and you want to store its 
+distinct types into a new table here is a query.
 
 select distinct cid into courseids from enrolled;
 
@@ -222,7 +237,8 @@ order by <coloumn> [asc|desc]
 
 the order by clause is used to sort data into ascending or descinding order.
 
-let us see an example where we will show the data of a table naming name_basics ordered by birth year of the person.
+let us see an example where we will show the data of a table naming name_basics 
+ordered by birth year of the person.
 
 select * from name_basics order by birth_year limit 10;
 
@@ -288,7 +304,8 @@ postgres=# select * from name_basics offset 10 limit 10;
 
 
 
-in the above example you can see there are first 10 rows displayed but using offset 10 the next 10 rows are displayed 
+in the above example you can see there are first 10 rows displayed but using offset 10 
+the next 10 rows are displayed 
 and the first 10 rows are skipped.
 
 
@@ -302,7 +319,8 @@ example:  get the names of students who enrolled in 15-445.
 
 select name from student where sid in (select sid from enrolled where cid = '15-445');
 
-some times in nested query might run every time for each row of outer query like in the above the worst case would be if the inner query run each time for outer quey checking new row. So, in that case you need to be carefull.
+some times in nested query might run every time for each row of outer query like in 
+the above the worst case would be if the inner query run each time for outer quey checking new row. So, in that case you need to be carefull.
 
 Here are some keywords and their use in nested queries.
 
@@ -327,17 +345,20 @@ select sid, name from students where sid in (select sid from enrolled order by s
 find all courses that has no students enrolled in it.
 
 
-select * from course where not exists (select * from enrolled where course.cid = enrolled.cid);
+select * from course where not exists (select * from enrolled where course.cid = 
+enrolled.cid);
 
 
 
 Window functions:
 
-performs a sliding calculation across a set of tuples that are related. like an aggregation but tuples are not grouped into
+performs a sliding calculation across a set of tuples that are related. like an 
+aggregation but tuples are not grouped into
 single output tuples.
 
 
-This includes aggregation functions that were previously discussed. It also includes some special 
+This includes aggregation functions that were previously discussed. It also includes 
+some special 
 functions that are row_number() , number of the current row.
 rank() , order position of the current row.
 
@@ -348,10 +369,17 @@ this will return the each row number in the table name_basics.
 
 rank() and over():
 
-The RANK() function assigns a unique rank to each distinct row in the result set within a specified window partition. If two rows have the same values, they will receive the same rank, and the next rank will be skipped. For example, if two rows have a rank of 1, the next row will be assigned a rank of 3.
+The RANK() function assigns a unique rank to each distinct row in the result set 
+within a specified window partition. If two rows have the same values, they will 
+receive the same rank, and the next rank will be skipped. For example, if two rows 
+have a rank of 1, the next row will be assigned a rank of 3.
 
 
-The OVER() clause defines the window partition and the ordering used for the window function. It specifies how the data should be partitioned and ordered before applying the window function. This allows you to calculate window functions over specific subsets of rows within the result set.
+The OVER() clause defines the window partition and the ordering used for the window 
+function. It specifies how the data should be partitioned and ordered before applying 
+the window function. This allows you to calculate window functions over specific 
+
+subsets of rows within the result set.
 
 
 example:
