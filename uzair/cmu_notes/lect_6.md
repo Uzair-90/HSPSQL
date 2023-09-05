@@ -90,9 +90,61 @@ threads.
 The page directory is the mapping from page ids to page locations in database files.
 * All changes must be recoreded on disk to allow the dbms to find on restart.
 
-The page table of the mappring from page ids to a copy of the page in the buffer pool
+The page table of the mapping from page ids to a copy of the page in the buffer pool
  frames.
 * This is an in memory data structure that does not need to be stored on disk.
+
+## Allocation Policies
+
+### Global policy
+
+* Make decision for all active policies.
+
+### Local Policies
+
+* Allocate frames for a specific queries without considering the behaviour of 
+concurrent queries.
+
+* Still need to support sharing pages.
+
+## Buffer Pool Optimizations
+
+* Multiple buffer pools.
+* Pre-fetching.
+* Scan Sharing.
+* Buffer Pool Bypass.
+
+### Multiple Buffer Pools
+
+The dbms always donot have a single buffer pool for the entire system.
+
+* Multiple buffer pool instances
+* Per-database buffer pool
+* Per-page type buffer pool
+
+Partitioning memory across multiple pool helps reduce latch contention and improve 
+locality. 
+
+#### Multiple Buffer Pools
+
+create bufferpool custom_pool size 250 pagesize 8k;
+
+create tablespace custom_tablespace pagesize 8k bufferpool custom_pool;
+
+create table new_table tablespace custom_tablespace (...);
+
+## Multiple Buffer pools
+
+#### Approach#1 object id
+
+* Embed and object identifier in record ids and then maintain a mapping from 
+objects to specific buffer pools.
+
+#### Approach#2 Hashing
+
+* Hash the page id to select which buffer pool to select.
+
+
 
 
 
