@@ -67,8 +67,6 @@ using multi threads:
 #include<string.h>
 #include <assert.h>
 #include <pthread.h> //include the prthread library
-#include "common.h" //header for pthread
-#include "common_threads.h" //header for pthread
 
 void *mythread(void *str) {
 	printf("%s\n", (char *) str);
@@ -78,12 +76,12 @@ int main(int argc, char *argv[]) {
 	pthread_t p1, p2;
  	int rc;
  	printf("main: begin\n");
- 	Pthread_create(&p1, NULL, mythread, "uzair");
+ 	pthread_create(&p1, NULL, mythread, "uzair");
  	printf(" ");
-	Pthread_create(&p2, NULL, mythread, "rehman");
+	pthread_create(&p2, NULL, mythread, "rehman");
  // join waits for the threads to finish
- 	Pthread_join(p1, NULL);
- 	Pthread_join(p2, NULL);
+ 	pthread_join(p1, NULL);
+ 	pthread_join(p2, NULL);
  	printf("main: end\n");
  return 0;
 }
@@ -91,8 +89,15 @@ int main(int argc, char *argv[]) {
 
 ### Output
 
-I am getting some kind of library error from common.h and thread_common.h but here is
-another example cehck it out.
+```html
+khans-Air:desktop khan$ ./a.out
+main: begin
+ uzair
+rehman
+main: end
+
+```
+Let us also see another example
 
 ```c
 #include <stdio.h>
@@ -143,19 +148,67 @@ Thread ID: 148045824, Static: 4, Global: 5
 ```
 Above programme shows thread id and each thread progress.
 
+## Problems
 
+In the first example there is no guarantee that which thead will run first whether
+thread T1 is created first it will run first and T2 will wait for the return of the
+first thread or vice versa there is no guarantee that which will run first so what 
+is the actual problem here? Let us discuss it.
 
+### Share data
 
+The simple thread example we showed above was useful in showing
+how threads are created and how they can run in different orders depending on how the scheduler decides to run them. What it doesn’t show you,
+though, is how threads interact when they access shared data.
+Let us imagine a simple example where two threads wish to update a
+global shared variable. 
 
+Look at the following code and see what kind of results those threads produce and then
+we will discuss the problems in it and its solutions.
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
 
+static volatile int counter = 0;
 
+void *mythread(void *arg) {
+    int i;
+    for (i = 0; i < 1000000; i++) {
+        counter += 1;
+    }
+    return NULL;
+}
 
+int main() {
+    pthread_t p1, p2;
 
+    pthread_create(&p1, NULL, mythread, NULL);
+    pthread_create(&p2, NULL, mythread, NULL);
 
+    pthread_join(p1, NULL); // Wait for thread p1 to finish
+    pthread_join(p2, NULL); // Wait for thread p2 to finish
 
+    printf("The counter value is: %d\n", counter);
 
+    return 0;
+}
 
+```
+
+### Output
+
+```html
+khans-Air:desktop khan$ gcc m_thread.c -lpthread
+khans-Air:desktop khan$ ./a.out
+The counter value is: 1280392
+```
+
+The value needs to be 2000000 but it's 1000000 why?
+
+Let us answer the question 
 
 
 
