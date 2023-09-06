@@ -58,8 +58,37 @@ constructing these types of programs. Processes are a more sound choice
 for logically separate tasks where little sharing of data structures in memory is 
 needed.
 
+## Example of thread creation
 
+Let us take an example of a thread printing two different strings s1 and s2 in parallel
+using multi threads:
 
+#include <stdio.h>
+#include<string.h>
+#include <assert.h>
+#include <pthread.h> //include the prthread library
+#include "common.h" //header for pthread
+#include "common_threads.h" //header for pthread
+
+void *mythread(void *str) {
+	printf("%s\n", (char *) str);
+	return NULL;
+}
+int main(int argc, char *argv[]) {
+	pthread_t p1, p2;
+ 	int rc;
+ 	printf("main: begin\n");
+ 	Pthread_create(&p1, NULL, mythread, "uzair");
+ 	printf(" ");
+	Pthread_create(&p2, NULL, mythread, "rehman");
+ // join waits for the threads to finish
+ 	Pthread_join(p1, NULL);
+ 	Pthread_join(p2, NULL);
+ 	printf("main: end\n");
+ return 0;
+}
+
+### Output
 
 
 
