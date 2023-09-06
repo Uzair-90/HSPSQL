@@ -135,11 +135,12 @@ int main()
 
 ```
 ### Output
+```html
 khans-MacBook-Air:desktop khan$ ./a.out
 Thread ID: 148045824, Static: 2, Global: 3
 Thread ID: 148045824, Static: 2, Global: 2
 Thread ID: 148045824, Static: 4, Global: 5
-
+```
 Above programme shows thread id and each thread progress.
 
 
