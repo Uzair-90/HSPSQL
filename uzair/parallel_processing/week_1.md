@@ -62,7 +62,7 @@ needed.
 
 Let us take an example of a thread printing two different strings s1 and s2 in parallel
 using multi threads:
-
+```c
 #include <stdio.h>
 #include<string.h>
 #include <assert.h>
@@ -87,6 +87,7 @@ int main(int argc, char *argv[]) {
  	printf("main: end\n");
  return 0;
 }
+```
 
 ### Output
 
