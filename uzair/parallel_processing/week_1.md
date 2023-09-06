@@ -208,10 +208,121 @@ The counter value is: 1280392
 
 The value needs to be 2000000 but it's 1000000 why?
 
-Let us answer the question 
+Let us answer the question the heart of the problem is uncotrolled scheduling.
 
+To understand why this happens, we must understand the code sequence that the compiler generates for the update to counter. In this
+case, we wish to simply add a number (1) to counter. Thus, the code
+sequence for doing so might look something like this (in x86);
+mov 0x8049a1c, %eax
+add $0x1, %eax
+mov %eax, 0x8049a1c
+This example assumes that the variable counter is located at address
+0x8049a1c. In this three-instruction sequence, the x86 mov instruction is
+used first to get the memory value at the address and put it into register
+eax. Then, the add is performed, adding 1 (0x1) to the contents of the
+eax register, and finally, the contents of eax are stored back into memory
+at the same address.
+Let us imagine one of our two threads (Thread 1) enters this region of
+code, and is thus about to increment counter by one. It loads the value
+of counter (let’s say it’s 50 to begin with) into its register eax. Thus,
+eax=50 for Thread 1. Then it adds one to the register; thus eax=51.
+Now, something unfortunate happens: a timer interrupt goes off; thus,
+the OS saves the state of the currently running thread (its PC, its registers
+including eax, etc.) to the thread’s TCB.
+Now something worse happens: Thread 2 is chosen to run, and it enters this same piece of code. It also executes the first instruction, getting
+the value of counter and putting it into its eax (remember: each thread
+when running has its own private registers; the registers are virtualized
+by the context-switch code that saves and restores them). The value of
+counter is still 50 at this point, and thus Thread 2 has eax=50. Let’s
+then assume that Thread 2 executes the next two instructions, incrementing eax by 1 (thus eax=51), and then saving the contents of eax into
+counter (address 0x8049a1c). Thus, the global variable counter now
+has the value 51.
+Finally, another context switch occurs, and Thread 1 resumes running.
+Recall that it had just executed the mov and add, and is now about to
+perform the final mov instruction. Recall also that eax=51. Thus, the final
+mov instruction executes, and saves the value to memory; the counter is
+set to 51 again.
+Put simply, what has happened is this: the code to increment counter
+has been run twice, but counter, which started at 50, is now only equal
+to 51. A “correct” version of this program should have resulted in the
+variable counter equal to 52.
 
+## Race conditions
 
+Race conditions are most commonly associated with computer science and programming. 
+They occur when two computer program processes, or threads, attempt to access the same 
+resource at the same time and cause problems in the system. Race conditions are 
+considered a common issue for multithreaded applications.
+
+Multiple threads executing this code can result in a race condition, we call this code a critical section. A critical section is a piece of
+code that accesses a shared variable (or more generally, a shared resource)
+and must not be concurrently executed by more than one thread.
+What we really want for this code is what we call mutual exclusion.
+This property guarantees that if one thread is executing within the critical
+section, the others will be prevented from doing so.
+
+## Critical Section
+
+In computer science, a critical section refers to a segment of code that is executed
+by multiple concurrent threads or processes, and which accesses shared resources.
+
+## Tip
+
+```html
+ USE ATOMIC OPERATIONS
+Atomic operations are one of the most powerful underlying techniques
+in building computer systems, from the computer architecture, to concurrent code (what we are studying here), to file systems (which we’ll study
+soon enough), database management systems, and even distributed systems [L+93].
+The idea behind making a series of actions atomic is simply expressed
+with the phrase “all or nothing”; it should either appear as if all of the actions you wish to group together occurred, or that none of them occurred,
+with no in-between state visible. Sometimes, the grouping of many actions into a single atomic action is called a transaction, an idea developed in great detail in the world of databases and transaction processing
+[GR92].
+In our theme of exploring concurrency, we’ll be using synchronization
+primitives to turn short sequences of instructions into atomic blocks of
+execution, but the idea of atomicity is much bigger than that, as we will
+see. For example, file systems use techniques such as journaling or copyon-write in order to atomically transition their on-disk state, critical for
+operating correctly in the face of system failures. If that doesn’t make
+sense, don’t worry — it will, in some future chapter.
+```
+
+# Solution
+
+### The Wish For Atomicity
+
+One way to solve this problem would be to have more powerful instructions that, in a single step, did exactly whatever we needed done
+and thus removed the possibility of an untimely interrupt. For example,
+what if we had a super instruction that looked like this:
+memory-add 0x8049a1c, $0x1
+Assume this instruction adds a value to a memory location, and the
+hardware guarantees that it executes atomically; when the instruction
+executed, it would perform the update as desired. It could not be interrupted mid-instruction, because that is precisely the guarantee we receive
+from the hardware: when an interrupt occurs, either the instruction has
+not run at all, or it has run to completion; there is no in-between state.
+Hardware can be a beautiful thing, no?
+Atomically, in this context, means “as a unit”, which sometimes we
+take as “all or none.” What we’d like is to execute the three instruction
+sequence atomically:
+mov 0x8049a1c, %eax
+add $0x1, %eax
+mov %eax, 0x8049a1c
+As we said, if we had a single instruction to do this, we could just
+issue that instruction and be done. But in the general case, we won’t have
+such an instruction. Imagine we were building a concurrent B-tree, and
+wished to update it; would we really want the hardware to support an
+“atomic update of B-tree” instruction? Probably not, at least in a sane
+instruction set.
+Thus, what we will instead do is ask the hardware for a few useful
+instructions upon which we can build a general set of what we call synchronization primitives. By using this hardware support, in combination with some help from the operating system, we will be able to build
+multi-threaded code that accesses critical sections in a synchronized and
+controlled manner, and thus reliably produces the correct result despite
+the challenging nature of concurrent execution. Pretty awesome, right?
+This is the problem we will study in this section of the book. It is a
+wonderful and hard problem, and should make your mind hurt (a bit).
+If it doesn’t, then you don’t understand! Keep working until your head
+hurts; you then know you’re headed in the right direction. At that point,
+take a break; we don’t want your head hurting too much.
+
+## One more problem
 
 
 
