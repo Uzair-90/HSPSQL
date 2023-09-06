@@ -268,19 +268,24 @@ by multiple concurrent threads or processes, and which accesses shared resources
 
 ## Tip
 
-```html
+```txt
  USE ATOMIC OPERATIONS
 Atomic operations are one of the most powerful underlying techniques
-in building computer systems, from the computer architecture, to concurrent code (what we are studying here), to file systems (which we’ll study
+in building computer systems, from the computer architecture, to concurrent code (what
+we are studying here), to file systems (which we’ll study
 soon enough), database management systems, and even distributed systems [L+93].
 The idea behind making a series of actions atomic is simply expressed
-with the phrase “all or nothing”; it should either appear as if all of the actions you wish to group together occurred, or that none of them occurred,
-with no in-between state visible. Sometimes, the grouping of many actions into a single atomic action is called a transaction, an idea developed in great detail in the world of databases and transaction processing
+with the phrase “all or nothing”; it should either appear as if all of the actions you
+wish to group together occurred, or that none of them occurred,
+with no in-between state visible. Sometimes, the grouping of many actions into a
+single atomic action is called a transaction, an idea developed in great detail in the
+world of databases and transaction processing
 [GR92].
 In our theme of exploring concurrency, we’ll be using synchronization
 primitives to turn short sequences of instructions into atomic blocks of
 execution, but the idea of atomicity is much bigger than that, as we will
-see. For example, file systems use techniques such as journaling or copyon-write in order to atomically transition their on-disk state, critical for
+see. For example, file systems use techniques such as journaling or copyon-write in
+order to atomically transition their on-disk state, critical for
 operating correctly in the face of system failures. If that doesn’t make
 sense, don’t worry — it will, in some future chapter.
 ```
