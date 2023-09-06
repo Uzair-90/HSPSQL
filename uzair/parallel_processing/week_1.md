@@ -1,4 +1,4 @@
-# Weel #1 notes
+# Week no. 1 notes
 
 The state of a single thread is thus very similar to that of a process.
 It has a program counter (PC) that tracks where the program is fetching instructions from. Each thread has its own private set of registers it
