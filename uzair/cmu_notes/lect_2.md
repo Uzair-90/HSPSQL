@@ -1,103 +1,113 @@
-relational data model is the superior data model for databases.
+Relational data model is the superior data model for databases.
 
-relational languages:
+## Relational languages:
 
-	data manipulation languages (DML)
-	data definition languages (DDL)
-	data control languages (DCL)
+*	Data manipulation languages (DML)
+*	Data definition languages (DDL)
+*	Data control languages (DCL)
 
-sql is based on bag algebra that contain duplicates not on set algebra that don't 
+Sql is based on bag algebra that contain duplicates not on set algebra that don't 
 contain duplicates.
 
-there are three sorts of data collection:
+There are three sorts of data collection:
  
- 	lists:
+#### Lists:
  		It can have duplications with a defined order where you can append data and 
         also pop data.
- 	Sets:
+#### Sets:
  		It doesn't have a defined order but it also don't have any duplications.
 
- 	 Bages:
+#### Bages:
  	 	It also don't have an order but it can allow duplicates.
 
 If we allow duplicated it can make query execution efficient.
  
 				
 
-						Lecture 2 Agneda
+###	Lecture 2 Agneda
 
-						-> Aggregations + Group By
-						-> String/Date/Time Operations
-						-> Output Control + Redirection
-						-> Nested Queries
-						-> Common Table Expressions
-						-> Window Functions
+* Aggregations + Group By
+* String/Date/Time Operations
+* Output Control + Redirection
+* Nested Queries
+* Common Table Expressions
+* Window Functions
 
-Aggregates: 
+## Aggregates: 
 
 	Functions that return a single value from a bag of tuples.
 	Those functions are:
 
-	Avg(col)
-	Min(col)
-	Max(col)
-	Sum(col)
-	count(col)
+*	Avg(col)
+*	Min(col)
+*	Max(col)
+*	Sum(col)
+*	count(col)
 
-for example using count to return the number of students form login col where they are
+For example using count to return the number of students form login col where they are
  @cs:
 
-		select count(login) as cnt from students where login like '@cs';
-							or
-		select count(*) as cnt from students where login like '@cs';
-							or
-		select count(1) as cnt from students where login like '@cs';
+```sql
+select count(login) as cnt from students where login like '@cs';
+                            or
+select count(*) as cnt from students where login like '@cs';
+                            or
+select count(1) as cnt from students where login like '@cs';
+```
 
-get the number of students and their avg gpa where login is @cs:
+Get the number of students and their avg gpa where login is @cs:
 
-		select avg(gpa), count(sid) from students where login like '@cs';
+```sql
+select avg(gpa), count(sid) from students where login like '@cs';
+```
 
-get the number of unique students means no duplications where login is @cs:
+Get the number of unique students means no duplications where login is @cs:
 
-		select count(DISTINCT login) as cnt from students where login like '@cs';
-
-
-select the average gpa from students table enrolled in each course from enrolled table:
-
-	select avg(s.gpa), e.cid from enrolled as e, students as s where e.sid = s.sid 
-    group by e.cid;
-
-	This will select the average of students enrolled in each course and will group 
-    them or arrange them them by cid in enrolled table.
+```sql
+select count(DISTINCT login) as cnt from students where login like '@cs';
+```
 
 
-non-aggregated values in select output clause must appear in group by clause like:
+Select the average gpa from students table enrolled in each course from enrolled table:
 
-		select avg(s.gpa), e.cid, s.name from enrolled as e, students as s where e.sid
+```sql
+select avg(s.gpa), e.cid from enrolled as e, students as s where e.sid = s.sid 
+group by e.cid;
+```
+
+This will select the average of students enrolled in each course and will group 
+them or arrange them them by cid in enrolled table.
+
+Non-aggregated values in select output clause must appear in group by clause like:
+
+```sql
+select avg(s.gpa), e.cid, s.name from enrolled as e, students as s where e.sid
          = s.sid group by e.cid,s.name;
+```
 
 
-Having clause:
+### Having clause:
 
 If you want to filter your data after aggregation then you must use having clause with
  gourpby like:
 
-			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
+```sql
+select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
             where e.sid = s.sid and avg_gpa > 3.9 group by e.cid;
+```
 
-			this query is not correct and will produce undefined behaviour because 
-            here you are trying to filter data with something that is not calculated 
-            yet which is avg_gpa. So the correct way to do this will be:
+This query is not correct and will produce undefined behaviour because 
+here you are trying to filter data with something that is not calculated 
+yet which is avg_gpa. So the correct way to do this will be:
 
-			select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
+```sql
+select avg(s.gpa) as avg_gpa, e.cid from endrolled as e, students as s 
             where e.sid = s.sid group by e.cid having avg_gpa > 3.9;
+```
+Now the above query will first calculate avg_gpa and then it will filter 
+your data which is the correct way to do it.
 
-			Now the above query will first calculate avg_gpa and then it will filter 
-
-            your data which is the correct way to do it.
-
-
-String operations:
+### String operations:
 
 Postgres is case-sensitve for strings and there will be single string quotes.
 
@@ -107,16 +117,20 @@ like is string matching operator used to match strings. e.g:- '15-%', '@c_'
 
 String concatination:
 
- 	string concatination in postgresql work as following:
+String concatination in postgresql work as following:
 
- 	select name from students where login = lower(name) || '@cs';
-
+```sql
+select name from students where login = lower(name) || '@cs';
+```
  	or
 
- 	select name from students where login = concat(lower(name),'@cs');
+```sql
+select name from students where login = concat(lower(name),'@cs');
+```
 
- 					output
+### Output
 
+```txt
 postgres=# select 'uzair' || ' ' || 'rehman';
    ?column?   
 --------------
@@ -128,19 +142,19 @@ postgres=#   select concat('uzair',' ','rehman');
 --------------
  uzair rehman
 (1 row)
-
-postgres=# 
-
-
-Date/Time operations:
+```
 
 
- select now();
+### Date/Time operations:
 
- a basic function that will show you the current time and date.
+```sql
+select now();
+```
 
-							output
+A basic function that will show you the current time and date.
 
+### Output
+```txt
 postgres=# select now();
               now              
 -------------------------------
@@ -156,63 +170,72 @@ select current_timestamp;
 -------------------------------
  2023-08-27 15:17:31.567865+05
 (1 row)
+```
 
-
+```sql
 select date('yyyy/mm/dd');
+```
 
-the above function will take the time as a string and will cast it into date type.
+The above function will take the time as a string and will cast it into date type.
 
-					output
-
+### Output
+```txt
 postgres=# select date('2023-08-27');
     date    
 ------------
  2023-08-27
 (1 row)
+```
 
-there is a function that will calculate the number of days between two dates as following:
 
+There is a function that will calculate the number of days between two dates as following:
+
+```sql
 select date('date1') -  date('date2') as days;
+```
+To show a working example of this let us run a query:
 
-
-to show a working example of this let us run a query:
-
+```sql
 select date('2023-08-27') - date('2001-02-09') as days;
+```
 
-					output
+### Output
 
-
+```txt
 postgres=# select date('2023-08-27') - date('2001-02-09') as days;
  days 
 ------
  8234
 (1 row)
+```
+So, I am 8234 days old according to today date that's funny I am feeling too old now.
 
+### Output redirection:
 
-so, I am 8234 days old according to today date that's funny I am feeling too old now.
-
-
-output redirection:
-
-this stores the query results into another tables.
+This stores the query results into another tables.
 
 there are rules for it that are:
 
-1) table must not already be defined.
-2) table will have the same number of columns with the same types as the input.
+* Table must not already be defined.
+* Table will have the same number of columns with the same types as the input.
 
 
-let us suppose you have a table enrolled with many records and you want to store its 
+Let us suppose you have a table enrolled with many records and you want to store its 
 distinct types into a new table here is a query.
 
+```sql
 select distinct cid into courseids from enrolled;
+```
 
-let us give a try to this on imdb non-commercial dataset tables.
+Let us give a try to this on imdb non-commercial dataset tables.
 
+```sql
 select primary_name into dummy_names from name_basics;
+```
 
-			output
+### Output
 
+```sql
 postgres=# select primary_name into dummy_names from name_basics;
 SELECT 12660630
 postgres=# select * from dummy_names limit 10;
@@ -230,19 +253,22 @@ postgres=# select * from dummy_names limit 10;
  James Cagney
 (10 rows)
 
+```
 
-output control:
+### Output control:
 
 order by <coloumn> [asc|desc]
 
-the order by clause is used to sort data into ascending or descinding order.
+The order by clause is used to sort data into ascending or descinding order.
 
-let us see an example where we will show the data of a table naming name_basics 
+Let us see an example where we will show the data of a table naming name_basics 
 ordered by birth year of the person.
 
+```sql
 select * from name_basics order by birth_year limit 10;
+```
 
-					output
+### Output
 
 
 postgres=# SELECT * FROM name_basics ORDER BY birth_year LIMIT 10;
@@ -260,15 +286,17 @@ postgres=# SELECT * FROM name_basics ORDER BY birth_year LIMIT 10;
  nm9049180 | Pliny the Younger  |         61 |        113 | {}                                     | {}
 (10 rows)
 
-offset:
+### Offset:
 
-this will pick the number of records mentioned in the offset like:
+This will pick the number of records mentioned in the offset like:
 
 
+```sql
 select * from name_basics offset 10;
+```
 
 
-this will show data after the first 10 as it will skip the first 10 rows;
+This will show data after the first 10 as it will skip the first 10 rows;
 
 example:
 
@@ -304,7 +332,7 @@ postgres=# select * from name_basics offset 10 limit 10;
 
 
 
-in the above example you can see there are first 10 rows displayed but using offset 10 
+In the above example you can see there are first 10 rows displayed but using offset 10 
 the next 10 rows are displayed 
 and the first 10 rows are skipped.
 
@@ -335,19 +363,23 @@ exists -> atleast one row is returned.
 
 find student record with the highest id that is enrolled in at least one course.
 
+```sql
 select sid, name from students where sid in (select max(sid) from enrolled);
+```
 
 					or you can also
 
+```sql
 select sid, name from students where sid in (select sid from enrolled order by sid desc limit 1);
+```
 
 
-find all courses that has no students enrolled in it.
+Find all courses that has no students enrolled in it.
 
-
+```sql
 select * from course where not exists (select * from enrolled where course.cid = 
 enrolled.cid);
-
+```
 
 
 Window functions:
@@ -359,13 +391,16 @@ single output tuples.
 
 This includes aggregation functions that were previously discussed. It also includes 
 some special 
-functions that are row_number() , number of the current row.
+Functions that are row_number() , number of the current row.
 rank() , order position of the current row.
 
-e.g:- select *, row_number over() as row_num from name_basics;
+Example: 
 
+```sql
+select *, row_number over() as row_num from name_basics;
+```
 
-this will return the each row number in the table name_basics.
+Tthis will return the each row number in the table name_basics.
 
 rank() and over():
 
@@ -382,8 +417,9 @@ the window function. This allows you to calculate window functions over specific
 subsets of rows within the result set.
 
 
-example:
+Example:
 
+```sql
 CREATE TABLE scores (
     student_id INT,
     subject VARCHAR(50),
@@ -401,22 +437,25 @@ VALUES
     (3, 'Math', 79),
     (3, 'Science', 82),
     (3, 'History', 90);
+```
 
 
 Now, suppose we want to rank students based on their scores in each subject.
 We'll use the RANK() function along with the OVER() clause:
 
 
+```sql
 SELECT
     student_id,
     subject,
     score,
     RANK() OVER (PARTITION BY subject ORDER BY score DESC) AS rank
 FROM scores;
+```
 
 
 
-				output
+### Output
 
  student_id | subject | score | rank 
 ------------+---------+-------+------
@@ -433,7 +472,7 @@ FROM scores;
 
 
 
-CTE (Common Table Expression):
+### CTE (Common Table Expression):
 
 Its a kind of temporary table or you can also say it's an alternative for nested queries and views.
 
