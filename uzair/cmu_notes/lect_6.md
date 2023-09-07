@@ -144,9 +144,130 @@ objects to specific buffer pools.
 
 * Hash the page id to select which buffer pool to select.
 
+## Pre Fetching
+
+The dbms can also pre-fetch pages based on a query plan.
+
+* Sequential Scans
+* Index Scans
+
+Let's suppose a query want a certain data and the dbms start looking for it when it
+go to the buffer pool and ask for a page whether you have it or not if the page 0
+is not available then it will fetch a page from the disk and look the data in that
+page but it fails to find data in page 0 then it will start looking for page 1 and 
+if it fails again then instead of going again and again to read pages from the disk 
+it will pre-fetch multiple pages from the disk into the buffer fools to reduce the
+number of reads from the disk this proccess of fetching is known as pre-fetching.
+
+## Scan Sharing
+
+Queries can reuse data retrieved from storage operator or operator computations. 
+* Also called synchronized scans.
+* This is different from result caching.
+
+Allo multiple queries to attach to a single cursor that scans a table.
+
+* Queries do not have to be the same.
+* Can also share intermediate results.
+
+This whole concept means that if one query retrieve some data other queries can 
+also use that data it's not typical result caching take it this way like if a 
+query fetched some pages from the table then we can use those pages for other queries
+as well.
+
+If a query wants to scan a table and another query is also doing this, then the 
+dbms will attach the second query's cursor to the existing cursor.
+
+Examples are fully supported in IBM db2, MSSQL and postgresql. Oracle can only
+share cursor for identical queries.
+
+## Buffer Pool Bypass
+
+The sequential scan operator will not store fetched pages in the buffer pool to
+avoid overhead.
+
+* Memory is local to running query.
+* Works well if the operator needs to read a large sequence of pages that are not
+contigues on disk.
+* Can also be used for temporary data (sorting,joins).
+
+Called light scans in informix.
+
+Like if you need a large data set from the disk you cannot store it in a private 
+buffer pool because you will have to do some extra effort on it like putting latches
+and other things etc. So, to avoid it bypass the buffer pool and throw the pages 
+immediately.
+
+## OS page chache
+
+Most disk operations go through the OS API. Unless the dbms tells it not to, the OS
+maintains its own filesystem cache (aka page chache, buffer chache).
+
+Most dbms use direct I/O (O_DIRECT) to bypass the OS's cache.
+* Redundant copies of pages.
+* Different Eviction Policies.
+* Loss of control over I/O.
+
+So what it means the dbms is a simple software for an OS like it comes in the category
+of user space below that we have OS space which includes file system and page chache
+after that so if the dbms request for a specific page from the file system it will go
+and start looking in the page cache maintained by the OS so most of the dbms don't
+want this because it may cause the above pointed problems. Postgres use OS page chache.
+
+## Quick demo on postgres
+
+```sql
+sync; echo 3 > /proc/sys/vm/drop_caches
+\timing
+set max_parallel_workers_per_page = 0; set jit = off;
+
+EXPLAIN (ANALYZE, BUFFERS) SELECT SUM(A+B) FROM DUMMY;
+
+```
+## Output
+
+```txt
+postgres=# EXPLAIN (ANALYZE, BUFFERS) SELECT SUM(A+B) FROM DUMMY;
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=409.08..409.09 rows=1 width=8) (actual time=12.582..12.583 rows=1 loops=1)
+   Buffers: shared hit=109
+   ->  Seq Scan on dummy  (cost=0.00..309.05 rows=20005 width=16) (actual time=0.057..4.058 rows=20005 loops=1)
+         Buffers: shared hit=109
+ Planning:
+   Buffers: shared hit=23
+ Planning Time: 6.245 ms
+ Execution Time: 14.053 ms
+(8 rows)
+
+```
+In the above output you can see the hit is 109.
+
+Let us run this query one more time.
+
+```sql
+EXPLAIN (ANALYZE, BUFFERS) SELECT SUM(A+B) FROM DUMMY;
+```
+## Output
+
+```txt
+postgres=# EXPLAIN (ANALYZE, BUFFERS) SELECT SUM(A+B) FROM DUMMY;
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=409.08..409.09 rows=1 width=8) (actual time=9.270..9.271 rows=1 loops=1)
+   Buffers: shared hit=109
+   ->  Seq Scan on dummy  (cost=0.00..309.05 rows=20005 width=16) (actual time=0.013..4.194 rows=20005 loops=1)
+         Buffers: shared hit=109
+ Planning Time: 0.067 ms
+ Execution Time: 9.325 ms
+(6 rows)
 
 
+```
 
+Here in the output you can see the that share hit rate in first one is 23 and in the 
+second one it's 109 this means that those pages were loaded in OS page cache by
+postgres.
 
 
 
