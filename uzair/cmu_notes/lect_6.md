@@ -269,10 +269,42 @@ Here in the output you can see the that share hit rate in first one is 23 and in
 second one it's 109 this means that those pages were loaded in OS page cache by
 postgres.
 
+## Table used in the example code.
+
+To create a dummy table use the following syntax:
+```sql
+create table dummy(a float, b float);
+```
+To insert data first create a .csv file using the following python script:
+
+```python
+import csv
+import random
+
+file_name = '/Users/khan/Desktop/floating_values_dataset.csv'
+num_rows = 20000  # Change this to the desired number of rows
 
 
+with open(file_name, 'w', newline='') as csv_file:
+    fieldnames = ['a', 'b']
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+    
+    writer.writeheader()  # Write the header row
+    
+    for _ in range(num_rows):
+        a = random.uniform(0.0, 1.0)  # Generate a random float between 0 and 1 for column 'a'
+        b = random.uniform(0.0, 1.0)  # Generate a random float between 0 and 1 for column 'b'
+        
+        writer.writerow({'a': a, 'b': b})
 
+```
+To copy the data into your dummy table use the following syntax:
 
+```sql
+COPY dummy FROM '/path/to/your/file.csv' DELIMITER ',' CSV HEADER;
+```
+After doing the steps mention you will have 200000 rows in your dummy table and you
+can perform the same experiment.
 
 
 
