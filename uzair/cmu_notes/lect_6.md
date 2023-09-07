@@ -306,6 +306,84 @@ COPY dummy FROM '/path/to/your/file.csv' DELIMITER ',' CSV HEADER;
 After doing the steps mention you will have 200000 rows in your dummy table and you
 can perform the same experiment.
 
+In postgres there is something known as prewarm as many times you run this query it
+will increase the number of shared hit pages and eventually it may load all the pages
+into the page cache.
+
+The page size in postgres is 8kb as mentioned before so, how much memory is allowed
+for share buffers let's check that out:
+
+```sql
+show shared_buffers;
+```
+## Output
+
+```txt
+postgres=# show shared_buffers;
+ shared_buffers 
+----------------
+ 128MB
+(1 row)
+```
+So, my shared buffer in postgres has a maximum size of 128MB which means it can load
+maximum of 16089 pages into cache memory.
+
+You can also change this from postgres config file.
+
+## Buffer replacement policies
+
+When the dbms needs to decide to free up a frame to make space for a new page,
+it must decide which page to evict from the buffer pool.
+
+#### Goals
+
+* Correctnes
+* Accuracy
+* Speed 
+* Meta-data overhead
+
+When a query executes and it needs to bring a page into the memory but what if the
+memory buffer is full? Then it should intellegently which pages should it evict to
+make space for the coming page so it will check some criteria for evicting a page 
+like some given in the goals.
+
+### Least-Reacently Used
+
+Maintain a single timestamp of each page when was last accessed.
+When the dbms needs to evict a page, select one with the oldest timestamp.
+* Keep the pages sorted to reduce the searching time for eviction.
+
+### Clock
+
+Approximation of LRU that doesn't need a seperate timestamp per page.
+* Each page has refrence bit.
+* When a page is accessed set it to 1.
+
+Organize the pages in a circular buffer with a clock hand:
+* Upon sweeping, check if a page bit is set to 1?
+* If yes, set to 0 otherwise evict it.
+
+### Problems
+
+LRU and clock replacement policies are susceptible to sequential flooding.
+* A query performs a sequential scan that reads every page.
+* This pollutes the buffer with pages that are red once and then never used.
+
+In some workloads the most recent used page is the most unneeded page.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
