@@ -119,7 +119,7 @@ In conclusion, the decision to use memory-mapped files in a DBMS depends on vari
  OS data structure contention ( situation in which multiple threads or processes concurrently attempt to access or modify the same data structures maintained by the operating system ). TLB shootdowns.
 
 ```txt
-Remember one thing is not your friend and will not tolerate any attempt to look for what is hidden.
+Remember one thing that OS is not your friend and will not tolerate any attempt to look for what is hidden.
 ```
 
 
