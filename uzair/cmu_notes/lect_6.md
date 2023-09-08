@@ -372,8 +372,59 @@ LRU and clock replacement policies are susceptible to sequential flooding.
 In some workloads the most recent used page is the most unneeded page.
 
 
+# Better Policies
 
+## LRU-K
 
+Track the history of last K refrences to each page as timestamps and compute the 
+interval between subsequent accesses.
+
+The DBMS then uses this history to estimate the next time that page is going to be
+accessed.
+
+The value of K determines how many recently used items are considered when making eviction decisions. A larger value of K means that more recently used items are considered, which can make the algorithm more flexible but also more computationally expensive.
+
+LRU-K is used in situations where the access patterns are not well-captured by traditional LRU. It can be particularly useful when there are access patterns that involve periodic or repetitive access to a set of items.
+
+However, it's important to note that implementing LRU-K can be more complex and computationally intensive compared to traditional LRU, so it's typically used in scenarios where the benefits outweigh the additional overhead.
+
+## Priority Hints
+
+The dbms knows about the context of each page during query execution.
+It can provide hints to the buffer whether the page is important or not.
+
+## Dirty Pages
+
+### Fast-Path
+
+If a page in the buffer is not dirty then the dbms can simply drop it.
+
+### Slow Path
+
+If a page is dirty then the dbms must write it back to the disk to make sure that
+its changes are persisted.
+
+Trade off between fast evictions versus dirty writing pages that will not be read
+again in the future.
+
+## Background Writing
+
+The dbms can walk through the page table periodically to write the dirty pages to
+the disk. 
+When a dirty page is safely written, the dbms can evict the page or just unset the
+dirty flag.
+Need to be careful the system does not write the dirty pages before their log records 
+are written.
+
+# Conclusion
+
+The dbms can almost always manage memory better than OS.
+
+Leverage the semantics about the query plan to make better decisions.
+
+* Evictions 
+* Allocations
+* Pre-fetching
 
 
 
