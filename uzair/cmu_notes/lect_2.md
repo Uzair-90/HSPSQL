@@ -473,6 +473,7 @@ FROM scores;
 
 ### Output
 
+```txt
  student_id | subject | score | rank 
 ------------+---------+-------+------
           3 | History |    90 |    1
@@ -485,6 +486,7 @@ FROM scores;
           2 | Science |    88 |    2
           3 | Science |    82 |    3
 (9 rows)
+```
 
 
 
