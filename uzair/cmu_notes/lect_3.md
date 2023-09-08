@@ -222,7 +222,7 @@ There are alot of problems in the given answer for example:
 
 We handle it in the following way:-
 
-The most common scheme is slotted pages. (for view check the image slotted_page.png in the same directory).
+![slotted page view](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/slotted_page.png)
 
 There is a slot array at the header of the page. The slot array maps "slots" to the tuples starting position offset.
 
@@ -361,20 +361,3 @@ The decision of whether or not to denormalize tuple data depends on the specific
 
 
 This is all for today more in next lecture thank you. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
