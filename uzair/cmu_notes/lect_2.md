@@ -271,6 +271,7 @@ select * from name_basics order by birth_year limit 10;
 ### Output
 
 
+```txt
 postgres=# SELECT * FROM name_basics ORDER BY birth_year LIMIT 10;
   nconst   |    primary_name    | birth_year | death_year |           primary_profession           |              known_for_titles               
 -----------+--------------------+------------+------------+----------------------------------------+---------------------------------------------
@@ -285,6 +286,7 @@ postgres=# SELECT * FROM name_basics ORDER BY birth_year LIMIT 10;
  nm0515385 | Titus Livius       |         59 |         17 | {writer}                               | {tt0003740}
  nm9049180 | Pliny the Younger  |         61 |        113 | {}                                     | {}
 (10 rows)
+```
 
 ### Offset:
 
@@ -298,9 +300,15 @@ select * from name_basics offset 10;
 
 This will show data after the first 10 as it will skip the first 10 rows;
 
-example:
+Example:
 
-postgres=# select * from name_basics limit 10;
+```sql
+select * from name_basics limit 10;
+```
+
+## Output
+
+```txt
   nconst   |  primary_name   | birth_year | death_year |          primary_profession           |             known_for_titles              
 -----------+-----------------+------------+------------+---------------------------------------+-------------------------------------------
  nm0000001 | Fred Astaire    |       1899 |       1987 | {soundtrack,actor,miscellaneous}      | {tt0031983,tt0072308,tt0050419,tt0053137}
@@ -314,8 +322,14 @@ postgres=# select * from name_basics limit 10;
  nm0000009 | Richard Burton  |       1925 |       1984 | {actor,soundtrack,producer}           | {tt0087803,tt0059749,tt0057877,tt0061184}
  nm0000010 | James Cagney    |       1899 |       1986 | {actor,soundtrack,director}           | {tt0031867,tt0029870,tt0042041,tt0035575}
 (10 rows)
+```
 
-postgres=# select * from name_basics offset 10 limit 10;
+```sql
+select * from name_basics offset 10 limit 10;
+```
+## Output
+
+```txt
   nconst   |    primary_name     | birth_year | death_year |           primary_profession            |             known_for_titles              
 -----------+---------------------+------------+------------+-----------------------------------------+-------------------------------------------
  nm0000011 | Gary Cooper         |       1901 |       1961 | {actor,soundtrack,stunts}               | {tt0034167,tt0035896,tt0027996,tt0044706}
@@ -329,7 +343,7 @@ postgres=# select * from name_basics offset 10 limit 10;
  nm0000019 | Federico Fellini    |       1920 |       1993 | {writer,director,actor}                 | {tt0047528,tt0050783,tt0056801,tt0071129}
  nm0000020 | Henry Fonda         |       1905 |       1982 | {actor,producer,soundtrack}             | {tt0050083,tt0032551,tt0082846,tt0051207}
 (10 rows)
-
+```
 
 
 In the above example you can see there are first 10 rows displayed but using offset 10 
@@ -340,14 +354,16 @@ and the first 10 rows are skipped.
 Nested Queries:
 
 
-queries containing other queries. They are often difficult to optimize.
+Queries containing other queries. They are often difficult to optimize.
 Inner queries can appear always (almost) any where in the parent query.
 
-example:  get the names of students who enrolled in 15-445.
+Example:  Get the names of students who enrolled in 15-445.
 
+```sql
 select name from student where sid in (select sid from enrolled where cid = '15-445');
+```
 
-some times in nested query might run every time for each row of outer query like in 
+Some times in nested query might run every time for each row of outer query like in 
 the above the worst case would be if the inner query run each time for outer quey checking new row. So, in that case you need to be carefull.
 
 Here are some keywords and their use in nested queries.
@@ -361,7 +377,7 @@ IN -> equivalent to any().
 exists -> atleast one row is returned.
 
 
-find student record with the highest id that is enrolled in at least one course.
+Find student record with the highest id that is enrolled in at least one course.
 
 ```sql
 select sid, name from students where sid in (select max(sid) from enrolled);
