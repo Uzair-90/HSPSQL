@@ -34,7 +34,7 @@ contiguously in a page.
 Ideal for oltp workloads where queries tend to operate only on an indivisual
 entity and insert-heavy workloads.
 
-![n-ary architecture](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/n_ary_storage.avif)
+![n-ary architecture](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/n_ary_storage.avif)
 
 In NSM you may have to check all pages if you need data more than a single tuple.
 Even if you need a single attribute from a table the harware will fetch all the

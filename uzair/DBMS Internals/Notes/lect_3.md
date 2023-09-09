@@ -222,7 +222,7 @@ There are alot of problems in the given answer for example:
 
 We handle it in the following way:-
 
-![slotted page view](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/slotted_page.png)
+![slotted page view](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/slotted_page.png)
 
 There is a slot array at the header of the page. The slot array maps "slots" to the tuples starting position offset.
 

@@ -145,7 +145,7 @@ Almost every dbms stores the database catalog inside itself.
 * Specialized code for bootstraping catalog tables.
 
 You can query the dbms internal information_schema catalog to get info about the database.
-![schema info](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/scheme_info.png)
+![schema info](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/scheme_info.png)
 
 In postgres just type: 
 ```sql
