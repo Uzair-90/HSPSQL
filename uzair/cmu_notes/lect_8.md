@@ -53,7 +53,9 @@ leaf node.
 
 The arrays are usually kept in sorted order.
 
- 
+![b plus tree structure](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/b%2B_leaf_node.png)
+
+
 
 
 
