@@ -99,6 +99,101 @@ Resolve collision by linearly searching for the next free slot in the table.
 * Must store the key in the index to know when to stop scanning.
 * Insertions and deletions are generalizations of lookups.
 
+## Linear Probe Hashing delete
+
+Approach: Tombstone
+
+* Set a marker to indicate that the entry is deleted.
+* You can reuse the slot for new keys.
+
+## Non Unique Keys
+
+### Choice 1: Seperate Linked List
+
+* Store values in seperate storage area for each key.
+
+### Redundant Keys
+
+* Store duplicate keys entries togather in the hash table.
+* This is easier to implement so this is waht most systems do.
+
+## Robin Hood Hashing
+
+Variant of linear probe hashing that steals slots from rich keys and give them to poor 
+keys.
+
+* Each key tracks the number of positions they are from where its optimal position in 
+the table.
+* On insert, a key takes the slot of another key if the first key is farther away from 
+its optimal position than the second key.
+
+## Cuckoo hashing
+
+Use multiple hash tables with different hash seeds.
+
+* On insert, check every table and pick anyone that has a free slot.
+* If no table has a free slot, evict the element from one of them and rehash it find a
+new locations.
+
+Look-up and deletions are always O(1) because only one location per hash table is 
+checked. 
+In this hashing algorithm we must keep track of the position from where we started or
+else we are going to stuck in an infinite loop.
+
+Best open source implementation is from CMU.
+
+# Observation 
+
+The previous hash tables require the dbms to know the exact number of elements it wants
+to store.
+* Otherwise, it must rebuild the table if it needs to grow/shrink in size.
+
+Dynamic hash tables resize themselves on demand.
+* Chained Hashing.
+* Extendible Hashing.
+* Linear Hashing.
+
+## Chained Hashing
+
+Maintain a linked list of buckets for each slot in the hash table.
+Resolve collisions by placing all the elements with the same hash in key in the same
+bucket.
+
+* To detemine whether an element is present hash to its bucket and search for it.
+* Insertions and deletions are generalizations of lookups.
+
+## Extendable Hashing
+
+Chained-hashing approach where we split buckets instead of letting the linked-list 
+grow forever.
+
+Multiple slot locations can point to the same bucket chain.
+
+Reshuffle bucket entries on split and increase the number of bits to examine.
+* Data movement is localized to just the split chain. 
+
+## Linear Hashing
+
+The hash table maintains a pointer that tracks the next bucket to split.
+
+* When any bucket overflows split the bucket at the pointer location.
+
+Use multiple hash tables to find the right bucket for a given key.
+
+Can use different overflow criterian:
+* Space utilization.
+* Average length of overflow chains.
+
+# Conclusion
+
+Fast data structures that supports O(1) lookups that are all used throughout the dbms
+internals.
+
+Hash tables are usually not what you want to use for a table index...
+
+
+
+
 
 
 
