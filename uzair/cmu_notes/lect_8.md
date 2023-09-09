@@ -88,7 +88,40 @@ To split inner noded redistribute entries evenly, but push up middle key.
 
 ### B+ Tree visualization
 
-[Visualize B+ Tree](https://cmudb.io/btree)
+[Visualize B+ Tree](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
+
+## B+ Tree DELETE
+
+Start at root, find leaf L where entry belongs.
+Remove the entry.
+If L is atleast half full done!
+
+If L has M/2-1 entries:
+* Try to redistribute, borrowing from sibling (adjacent node with same parent L).
+* If redistribution fails, try to merge L and sibling.
+
+If merge occured, must delete entry (pointing to L or sibling) from parent of L.
+
+## Selection Conditions
+
+The dbms can use a B+ tree index if query provides any of the attributes of the search
+key.
+
+Example index on <a,b,c>
+
+* Supported (a = 1 AND b = 2 AND c =3)
+* Supported (a = 1 AND b = 2)
+* Supported (b =2),(c = 3)
+
+Not all DBMS support this.
+For a hash index we must have all attributes in the search key.
+
+## B+ Tree Duplicate Keys
+
+Approach 1:
+
+
+
 
 
 
