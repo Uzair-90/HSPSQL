@@ -31,7 +31,8 @@ People also use the term to generally refer to a class of balanced tree data str
 
 ## B+ Tree
 
-A B+ tree is a self-balancing tree data structure that keeps data sorted and allows searching, sequential access, insertions, and deletion always in O(log n).
+A B+ tree is a self-balancing tree data structure that keeps data sorted and allows 
+searching, sequential access, insertions, and deletion always in O(log n).
 
 * Generalization of a binary search tree, since a node can have more than two children.
 * Optimized for systems that read and write large blocks of data.
@@ -55,10 +56,39 @@ The arrays are usually kept in sorted order.
 
 ![b plus tree structure](https://github.com/Uzair-90/practice/blob/master/uzair/cmu_notes/b%2B_leaf_node.png)
 
+### Leaf node values
 
+#### Approach #1: Record IDS
+A pointer to the location of the tuple to which the index entry corresponds.
 
+#### Approach #2: Tuple data
+* The leaf node stores the actual contents of the tuple.
+* Secondary indexes must store the record ids as their values.
 
+## B-Tree vs B+ Tree
 
+The original B-Tree from 1972 stored keys and values in all nodes in the tree.
+* More space efficient since each key appears once in the tree.
+
+A B+Tree only stores values in the leaf nodes. Inner nodes only guide the search 
+process.
+
+## B+ Tree insert
+
+* Find the correct laef node L.
+* Insert data entry into L in sorted order.
+* If L has enough space done!
+
+Otherwise, split L keys into L and a new node L2.
+
+* Redistribute entries everly, copy up middle key.
+* Insert index entry pointing to L2 into parent of L.
+
+To split inner noded redistribute entries evenly, but push up middle key.
+
+### B+ Tree visualization
+
+[Visualize B+ Tree](https://cmudb.io/btree)
 
 
 
