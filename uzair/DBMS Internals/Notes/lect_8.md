@@ -147,22 +147,129 @@ This will always be better than sorting data for each query.
 
 ![clustered b+ tree structure](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/Cluestered_btree.png)
 
+## Index scan page sorting
+
+Retrieving tuples in the order they appear in a non-clustered index is inefficient 
+due to redundant reads.
+The DBMS can first figure out all the tuples that it needs and then sort them based
+on their Page ID.
+
+Let do a quick demo on postgres:
+
+To create an index use the following syntax:
+```sql
+create index idx_a_tree on dummy using BTREE(a);
+```
+### Output
+
+```txt
+CREATE INDEX
+```
+
+To create a hash index use the following syntax:
+
+```sql
+create index idx_a_hash on dummy using hash(a);
+```
+### Output
+
+```txt
+CREATE INDEX
+```
+Show me the min value in column a:
+
+```sql
+postgres=# select min(a) from dummy;
+          min           
+------------------------
+ 0.00014804858256889375
+(1 row)
+
+Time: 3.520 ms
+```
+Now to check how the query works:
+
+```sql
+explain select min(a) from dummy;
+```
+### Output
+
+```txt
+postgres=# explain select min(a) from dummy;
+                                           QUERY PLAN                                            
+-------------------------------------------------------------------------------------------------
+ Result  (cost=0.32..0.33 rows=1 width=8)
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=0.29..0.32 rows=1 width=8)
+           ->  Index Only Scan using idx_a_tree on dummy  (cost=0.29..578.38 rows=20005 width=8)
+                 Index Cond: (a IS NOT NULL)
+(5 rows)
+
+Time: 4.641 ms
+```
+Let us try a little complex query now:
+
+```sql
+WITH MinA AS (
+    SELECT MIN(a) AS min_a FROM dummy
+)
+SELECT *
+FROM dummy
+WHERE a = (SELECT min_a FROM MinA);
+```
+### Output
+
+```txt
+           a            |          b          
+------------------------+---------------------
+ 0.00014804858256889375 | 0.12637597891325947
+(1 row)
+
+Time: 5.665 ms
+```
+Now if we explain this query working:
+
+```sql
+EXPLAIN WITH MinA AS (
+    SELECT MIN(a) AS min_a FROM dummy
+)
+SELECT *
+FROM dummy
+WHERE a = (SELECT min_a FROM MinA);
+```
+### Output
+
+```txt
+                                                   QUERY PLAN                                                    
+-----------------------------------------------------------------------------------------------------------------
+ Index Scan using idx_a_hash on dummy  (cost=0.34..8.35 rows=1 width=16)
+   Index Cond: (a = $1)
+   InitPlan 2 (returns $1)
+     ->  Result  (cost=0.32..0.33 rows=1 width=8)
+           InitPlan 1 (returns $0)
+             ->  Limit  (cost=0.29..0.32 rows=1 width=8)
+                   ->  Index Only Scan using idx_a_tree on dummy dummy_1  (cost=0.29..578.38 rows=20005 width=8)
+                         Index Cond: (a IS NOT NULL)
+(8 rows)
+
+Time: 2.036 ms
+```
+As you can see in the explaination the DBMS did lookups using indexes and reduced the 
+execution time very much.
+
+There is a command in postgres known as CLUSTER used to create cluster indexes.
+
+```sql
+cluster dummy using idx_a_tree;
+```
+This will change the the simple B+ Tree indexes into cluster indexes.
 
 
+To study more about cluster indexes check the following link.
 
+[Cluster indexes](https://www.tutorialspoint.com/what-is-clustering-index-in-dbms#:~:text=A%20Clustered%20index%20is%20one,data%20in%20the%20indexed%20columns.)
 
-
-
-
-
-
-
-
-
-
-
-
-
+This is all for B+ Tree you can always study more about it from different resources.
 
 
 
