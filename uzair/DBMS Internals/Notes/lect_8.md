@@ -118,7 +118,36 @@ For a hash index we must have all attributes in the search key.
 
 ## B+ Tree Duplicate Keys
 
-Approach 1:
+Approach 1: Append Record IDS
+
+* Add the tuples unique record record id as a part of the key to ensure that all keys 
+are unique.
+* The DBMS can still use partial keys to find tuples.
+
+Approach 2: Overflow Leaf Nodes
+
+* Allow leaf node to split into overflow node that contain duplicate keys.
+* This is more complex to maintain and modify.
+
+## Clustered Indexes
+
+The table is sorted in the sort order specified by the primary key.
+* Can be either heap or index-organized storage.
+
+Some DBMS always use a clustered index.
+* If a table does not contain a primary key, the DBMS will automatically make a hidden 
+primary key.
+
+Other DBMS cannot use them at all.
+
+## Clustered B+ Tree
+
+Traverse to the most left leaf page and then retrieve tuples from all leaf pages.
+This will always be better than sorting data for each query.
+
+![clustered b+ tree structure](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/Cluestered_btree.png)
+
+
 
 
 
