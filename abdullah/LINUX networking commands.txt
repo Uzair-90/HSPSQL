@@ -1,0 +1,101 @@
+Networking commands in linux:
+
+.ifconfig: give information about network interfaced devices .
+>ipconfig tells us to which ip adresses we are connected to.
+
+.ip -4 addr: tells us about ipv4 adress.
+>IPv4 uses class-type address space and broadcast addresses.
+>seperated by dot
+
+.ip-6 addr : tells us about ipv6 adrreses.
+>ipv6 supports 128-bit adresses.
+>IPv6 has a larger address space
+>iPv6 has improved security features, such as data authentication and encryption, that are built in with the protocol.
+>allows for more unique IP addresses and devices to connect to the internet.
+
+#netsat:
+>Netstat command displays various network related information such as network connections, routing tables, interface statistics, masquerade connections, multicast memberships etc.
+> command used in linux for checking to which ports we are connected to
+
+#netsat -tn:
+>To see the IP and port numbers of each established connection
+
+># netstat -a  :
+ >To show both listening and non-listening sockets.
+
+# netstat -at : 
+To list all tcp ports.
+
+# netstat -au :
+>To list all udp ports.
+
+#netsat -l:
+>shows all of the active ports
+
+.TCP:
+>TCP allows for the transmission of information in both directions. This means that computer systems that communicate over TCP can send and receive data at the same time, similar to a telephone conversation.
+>The TCP software in the network protocol stack of the operating system is responsible for establishing and terminating the end-to-end connections as well as transferring data.
+
+.Check TCP Connection Status in Linux
+To display listeners and connections on Linux we can use the netstat or ss command. While older Linux boxes only support netstat, newer Linux distributions use netstat and ss in parallel. However, with the introduction of ss, netstat is marked as deprecated. 
+
+
+# Display all the connections
+netstat -anpl
+# Display only TCP sockets / connections.
+netstat -t
+ss -t
+# Display only UDP sockets / connections.
+netstat -u
+ss -u
+
+
+#curl:
+>curl (short for "Client URL") is a command line tool that enables data transfer over various network protocols. It communicates with a web or application server by specifying a relevant URL and the data that need to be sent or received.
+The most common use cases for curl are:
+
+Downloading files from the internet
+Endpoint testing
+Debugging
+Error logging
+
+>install curl on Linux : sudo apt install curl
+
+#curl [options/URLs]
+
+For example:
+
+#curl https://www.gnu.org/gnu/gnu.html
+
+The system outputs the HTML contents found on the URL provided after the curl command.
+
+
+To save the result of the curl command, use either the -o or -O option.
+
+.Lowercase -o saves the file with a predefined filename, which in the example below is vue-v2.6.10.js:
+#curl -o vue-v2.6.10.js https://cdn.jsdelivr.net/npm/vue/dist/vue.js
+
+.Uppercase -O saves the file with its original filename:
+#curl -O https://cdn.jsdelivr.net/npm/vue/dist/vue.js
+
+#curl -X POST  http:// path:
+send a post request
+
+if we want to send post request with data so we use command :
+#curl -X POST --data ""p1=value&p2=value2" http://path
+
+
+.another way to send data with curl:
+#curl -X POST -d parm1=value -dparm2=value http://path
+
+to save response server from the file we use command 
+#curl -o response http://path
+#cat response to show
+
+#curl --help :for help
+
+
+
+
+
+to be continued
