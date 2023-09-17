@@ -100,15 +100,15 @@ threads.
 * Held for operation duration.
 * Do not need to be able to rollback changes.
 
-		|Locks|Latches|
-|-------|-----|-------|
-|Separate|	  |	      |
-|Protect|	  |	      |
-|During	|	  |	      |
-|Modes	|	  |	      |
-|DeadLock|	  |	      |
-|by		|	  |	      |
-|Kept in|	  |	      |
+|                 | Locks                 | Latches               |
+| --------------- | --------------------- | --------------------- |
+|                 | Separate              | User Transactions     |
+| Protect         | Database Contents     | In-Memory Data Structures |
+| During Modes    | Entire Transactions   | Critical Sections     |
+| Modes           | Shared, Exclusive, Update, Intention | Read, Write |
+| DeadLock by     | Waits-for, Timeout, Aborts | Coding Discipline  |
+| Kept in         | Lock Manager          | Protected Data Structure |
+
 
 
 
