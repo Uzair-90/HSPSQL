@@ -182,7 +182,7 @@ We need to protect against two types of problems:
 
 ## Solution
 
-## L ATC H C R A B B I N G /C O U P L I N G
+## LATCH  CRABBING/COUPLING
 
 Protocol to allow multiple threads to access/modify B+Tree at the same time.
 * Get latch for parent
@@ -193,7 +193,7 @@ A safe node is one that will not split or merge when updated.
 * More than half-full (on deletion)
 
 
-## B E T T E R L ATC H I N G A LG O R I T H M
+## B E T T E R  LATCHING  A LG O R I T H M
 
 Most modifications to a B+Tree will not require a split or merge.
 Instead of assuming that there will be a split/merge, optimistically traverse
@@ -210,7 +210,7 @@ This approach optimistically assumes that only leaf node will be modified; if no
 latches set on the first pass to leaf are wasteful.
 
 
-## O B S E R VAT I O N
+## OBSERVATION
 
 The threads in all the examples so far have acquired latches in a "top-down" manner.
 * A thread can only acquire a latch from a node that is below its current node.
