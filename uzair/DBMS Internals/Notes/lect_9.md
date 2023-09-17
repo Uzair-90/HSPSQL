@@ -102,7 +102,7 @@ threads.
 
 |                 | Locks                 | Latches               |
 | --------------- | --------------------- | --------------------- |
-|                 | Separate              | User Transactions     |
+| Separate        | User Transaction      | Threads			      |
 | Protect         | Database Contents     | In-Memory Data Structures |
 | During Modes    | Entire Transactions   | Critical Sections     |
 | Modes           | Shared, Exclusive, Update, Intention | Read, Write |
