@@ -101,14 +101,14 @@ threads.
 * Do not need to be able to rollback changes.
 
 		|Locks|Latches|
-		|-----|-------|
-Separate|	  |	      |
-Protect	|	  |	      |
-During	|	  |	      |
-Modes	|	  |	      |
-DeadLock|	  |	      |
-by		|	  |	      |
-Kept in	|	  |	      |
+|-------|-----|-------|
+|Separate|	  |	      |
+|Protect|	  |	      |
+|During	|	  |	      |
+|Modes	|	  |	      |
+|DeadLock|	  |	      |
+|by		|	  |	      |
+|Kept in|	  |	      |
 
 
 
