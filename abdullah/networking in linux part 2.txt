@@ -1,0 +1,46 @@
+networking in linux part 2:
+
+A group of interconnected computers are called as a netwrok.
+Working on networks and handling them would be called as networking.
+
+why do we need networking?
+Share resources across the netwrok.
+communicate across the network with other users.
+
+if we have to stop or start any internet connection on linux
+eg:ifconfig
+then see the the ports to which we are connected to for example it is port4
+so we use command :
+#sudo ifdown port4 :the connection will stop or dismissed
+#sudo ifup port4 :connection will start.
+
+
+#ping:
+a way to check wether a computer can communicate with another computer over the network.
+1: ping google.com: to check wether ur computer is connected to internet or not. we have send a packet to google.com that we are connected to it or not google telss us the response.
+2:#ping -c 5: 
+System just send 5 packets
+ping command is the most useful and basic commands to check both computers connected or not
+
+
+
+#wget: A command used to retieve content from web servers 
+#wget <URL>
+
+Its primary purpose is to download webpages.
+GNU Wget is a command-line utility for downloading files from the web. With Wget, you can download files using HTTP, HTTPS, and FTP protocols. Wget provides a number of options allowing you to download multiple files, resume downloads, limit the bandwidth, recursive downloads, download in the background, mirror a website, and much more.
+
+Installing Wget on Ubuntu and Debian
+#sudo apt install wget
+
+.Saving the Downloaded File Under Different Name
+To save the downloaded file under a different name, pass the -O option followed by the chosen name:
+
+wget -O latest-hugo.zip https://github.com/gohugoio/hugo/archive/master.zip
+Copy
+The command above will save the latest hugo zip file from GitHub as latest-hugo.zip instead of its original name.
+
+.You can resume a download using the -c option. This is useful if your connection drops during a download of a large file, and instead of starting the download from scratch, you can continue the previous one.
+
+.Downloading Multiple Files
+If you want to download multiple files at once, use the -i option followed by the path to a local or external file containing a list of the URLs to be downloaded. Each URL needs to be on a separate line.
