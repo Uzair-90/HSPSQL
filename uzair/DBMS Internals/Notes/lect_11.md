@@ -132,6 +132,8 @@ What if smaller table (S) is used as the outer table? * N + (n ∙ M) = 500 + (4
 
 ## Blocked Nested Join Loops
 
+![nested block image](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/nested_block.png)
+
 
 
 
