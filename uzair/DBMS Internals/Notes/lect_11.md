@@ -371,6 +371,7 @@ If we do not know the size, then we must use a dynamic hash table or allow for o
 
 ## Join Algorithms
 
+![jion Algos](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/join_algos.png)
 
 ## Conclusion
 
