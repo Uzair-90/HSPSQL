@@ -283,6 +283,102 @@ Phase #2: Probe
 
 ![hash join](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/hash_join.png)
 
+### Hash Table Contents
+
+Key: The attribute(s) that the query is joining the tables on.
+* We always need the original key to verify that we have a correct match in case of hash 
+collisions.
+Value: Varies per implementation.
+* Depends on what the operators above the join in the query plan expect as its input.
+* Early vs. Late Materialization
+
+## Cost Analysis
+
+How big of a table can we hash using this approach?
+* B-1 "spill partitions" in Phase #1
+* Each should be no more than B blocks big
+Answer: B ∙ (B-1)
+* A table of N pages needs about sqrt(N) buffers
+* Assumes hash distributes records evenly. 
+Use a "fudge factor" f>1 for that: we need B∙sqrt(f∙N)
+
+Bloom filters can be used as an optimization technique in Hash Join operations to reduce the amount of data that needs to be loaded into memory, making the join process more efficient, especially when dealing with large datasets. Here's how Bloom filters can be employed for Hash Join optimizations:
+
+Building Bloom Filters:
+
+Before performing the Hash Join, a Bloom filter is constructed for one or both of the tables involved in the join operation.
+A Bloom filter is a space-efficient data structure used to test whether an element is a member of a set. It uses a set of hash functions and a bit array. Initially, all bits in the array are set to 0.
+For each row in the table(s) for which you're constructing the Bloom filter(s), you apply the hash functions to the join key(s) of the row and set the corresponding bits in the Bloom filter(s) to 1.
+Filtering Phase:
+
+During the Hash Join operation, before loading an entire table into memory, you can use the Bloom filter(s) to perform a quick initial filter.
+For each row in the other table (probe table), you apply the same hash functions to the join key(s) and check the corresponding bits in the Bloom filter(s). If all bits are set to 1, it indicates a possible match.
+Rows that fail the Bloom filter test (i.e., any of the bits are 0) are skipped, reducing the number of rows that need to be loaded into memory for the actual join.
+Hash Join:
+
+After the initial filtering using Bloom filters, you proceed with the Hash Join as usual, but now with a reduced dataset in memory. This can significantly improve memory usage and join performance.
+Bloom filters are useful in situations where the cost of loading data into memory is high, such as when dealing with large tables or distributed databases. They help eliminate many rows that are guaranteed not to match the join condition, reducing the memory and computational resources required for the actual join.
+
+However, it's essential to keep in mind that Bloom filters may produce false positives (indicating a match when there isn't one). Therefore, they are typically used as a preliminary filtering step to reduce the dataset size before the actual Hash Join. Any potential matches identified by the Bloom filter must be further verified in the subsequent Hash Join phase to ensure correctness.
+
+
+## Partioned Hash Join
+
+A Partitioned Hash Join is an extension of the traditional Hash Join algorithm that is designed to improve the performance of join operations, especially in distributed database systems. In a Partitioned Hash Join, data is divided into partitions, and each partition is processed independently, reducing data movement and improving parallelism. Let's walk through the key steps of a Partitioned Hash Join and perform a simple cost analysis.
+
+Steps of a Partitioned Hash Join:
+
+### Partitioning Phase:
+Both the left (or outer) and right (or inner) tables are divided into partitions based on the join key values. Each partition contains rows with the same hash value on the join key.
+The number of partitions in each table is typically determined based on the available resources and the distribution of data. The goal is to evenly distribute the data across partitions.
+
+### Local Hash Join:
+Each partition of the left table is joined with the corresponding partition of the right table using a local Hash Join. This means that the Hash Join operation is performed independently within each partition.
+
+### Shuffling Phase (Data Exchange):
+After the local Hash Join, the results of each partition are reshuffled or exchanged based on the join key values. Rows with the same join key hash values are sent to the same destination node or partition.
+This shuffling phase can involve data movement across the distributed system, and it's a critical step in the Partitioned Hash Join.
+
+### Global Hash Join:
+Once the data is properly shuffled, a global Hash Join is performed on the redistributed data. This step is similar to a traditional Hash Join but is now performed on a smaller subset of the data since each partition contains only the rows that match the join key values from the other table's partition.
+
+## Cost of Partioned Hash Join
+
+Cost of hash join?
+* Assume that we have enough buffers.
+* Cost: 3(M + N)
+Partitioning Phase:
+* Read+Write both tables
+* 2(M+N) IOs
+Probing Phase:
+* Read both tables → M+N IOs
+
+
+Example database:
+* M = 1000, m = 100,000
+* N = 500, n = 40,000
+Cost Analysis:
+* 3 ∙ (M + N) = 3 ∙(1000 + 500) = 4,500 IOs
+* At 0.1 ms/IO, Total time ≈ 0.45 seconds
+
+## Observation
+
+No constraint on the size of inner table.
+If the DBMS knows the size of the outer table,
+then it can use a static hash table.
+* Less computational overhead for build / probe operations.
+If we do not know the size, then we must use a dynamic hash table or allow for overflow pages.
+
+## Join Algorithms
+
+
+## Conclusion
+
+Hashing is almost always better than sorting for operator execution.
+Caveats:
+* Sorting is better on non-uniform data.
+* Sorting is better when result needs to be sorted.
+Good DBMSs use either (or both).
 
 
 
