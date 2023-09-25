@@ -176,17 +176,109 @@ We can avoid sequential scans by using an index to find inner table matches.
 
 ![index_join](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/index_join.png)
 
+The cost will be some constant for searching C now the cost depends on C:
+
+cost = M+(m.C)
+
+## Nested loop join summary:
+
+Key takeaways:
+* Pick the smaller table as the outer table.
+* Buffer as much of the outer table in memory as possible.
+* Loop over the inner table (or use an index).
+
+Algorithms:
+
+* Simple / Stupid
+* Block
+* Index
 
 
+## Sort-Merge Join
+
+A Sort-Merge Join is a type of JOIN algorithm used in database query processing to combine rows from two tables during a JOIN operation. It is particularly useful when the tables being joined are not already sorted on the join key and cannot be efficiently indexed for the JOIN operation.
+
+Here's how a Sort-Merge Join works:
+
+Sorting: First, both the left (or outer) table and the right (or inner) table are independently sorted based on the join key. This sorting step can be computationally expensive, especially for large tables. However, it is a crucial step for the efficiency of the Sort-Merge Join.
+
+Merging: Once both tables are sorted, the actual merge operation takes place. The merge operation is similar to merging two sorted lists. It involves comparing values in the join key columns of the sorted tables and combining matching rows.
+
+The Sort-Merge Join process starts by comparing the first row of the left table with the first row of the right table. If they match, these rows are combined into a result row.
+
+If the values do not match, the algorithm moves to the next row in either the left or right table (whichever value is smaller) and continues comparing and merging until all matches are found.
+
+If a row in one table does not have a matching row in the other table, it is not included in the result set. This behavior depends on whether you're performing an INNER JOIN, LEFT JOIN, RIGHT JOIN, or FULL JOIN.
+
+Result Set: The result of the Sort-Merge Join is a combined result set containing rows from both tables that satisfy the join condition.
+
+Advantages of Sort-Merge Join:
+
+Efficient for Non-Sorted Data: Unlike some other JOIN algorithms that require pre-sorted data or indexed columns, the Sort-Merge Join can efficiently handle tables that are not already sorted.
+
+Predictable Performance: The Sort-Merge Join's performance is relatively predictable and doesn't depend on the distribution of data as much as some other JOIN algorithms.
+
+Disadvantages of Sort-Merge Join:
+
+High Initial Cost: The sorting step can be computationally expensive, especially for large tables. This cost can be significant, and it may make Sort-Merge Join less efficient for smaller datasets.
+
+Space Requirements: Sorting both tables can require additional disk space to store the sorted versions of the tables.
+
+May Not Be Optimal for Small Tables: Sort-Merge Join may not be the best choice for very small tables where other JOIN algorithms like Nested Loop Join could be more efficient.
+
+The choice of which JOIN algorithm to use depends on factors such as table sizes, available memory, and the query optimizer's decisions based on these factors. The query optimizer's goal is to select the most efficient algorithm for a given query, considering the specific characteristics of the tables and the join conditions.
 
 
+## Cost of Sort-Merge Join
+
+Sort Cost (R): 2M ∙ (1 + ⌈ logB-1 ⌈M / B⌉ ⌉)
+Sort Cost (S): 2N ∙ (1 + ⌈ logB-1 ⌈N / B⌉ ⌉)
+Merge Cost: (M + N)
+Total Cost: Sort + Merge
+
+## Example database:
+
+* Table R: M = 1000, m = 100,000
+* TableS: N=500,n=40,000
+With B=100 buffer pages, both R and S can be sorted in two passes:
+* Sort Cost (R) = 2000 ∙ (1 + ⌈log99 1000 /100⌉) = 4000 IOs
+* Sort Cost (S) = 1000 ∙ (1 + ⌈ log99 500 / 100⌉) = 2000 IOs
+* Merge Cost = (1000 + 500) = 1500 IOs
+* Total Cost = 4000 + 2000 + 1500 = 7500 IOs
+* At 0.1 ms/IO, Total time ≈ 0.75 seconds
+
+The worst case for the merging phase is when the join attribute of all the tuples in both relations contains the same value.
+Cost: (M ∙ N) + (sort cost)
+
+## Question
+
+When is Sort-Merge Join useful?
+
+One or both tables are already sorted on join key. Output must be sorted on join key.
+The input relations may be sorted either by an explicit sort operator, or by scanning the
+relation using an index on the join key.
+
+## Hash Joins
+
+Think of a Hash Join like organizing a big party where you have two guest lists, and you want to find who's coming to your party. First, you create separate buckets for each list, grouping guests by their names (like all the Johns in one bucket). Then, you take one list, say the smaller one, and put it in your memory. Now, you pick up the other list and start looking for matching guests by their names. You use the buckets you created earlier to quickly find the right group of people (like all the Johns) and see if they're on both lists. If you find a match, you add those guests to your final party list. You keep doing this for all the guests on the second list. In the end, you have a list of all the people who are coming to your party – those are your join results! The key here is that you use these buckets and memory to find matches faster, especially when you have a lot of guests (or rows) to check.
 
 
+If tuple r ∈ R and a tuple s ∈ S satisfy the join condition, then they have the same value for 
+the join attributes.
+If that value is hashed to some partition i, the R tuple must be in ri and the S tuple in si.
+Therefore, R tuples in ri need only to be compared with S tuples in si.
 
 
+### Basic Hash Join Algorithm
 
+Phase #1: Build
 
+* Scan the outer relation and populate a hash table using the hash function h1 on the join attributes.
 
+* We can use any hash table that we discussed before but in practice linear probing works the best.
+Phase #2: Probe
+
+* Scan the inner relation and use h1 on each tuple to jump to a location in the hash table and find a matching tuple.
 
 
 
