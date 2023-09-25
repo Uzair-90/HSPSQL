@@ -281,6 +281,8 @@ Phase #2: Probe
 * Scan the inner relation and use h1 on each tuple to jump to a location in the hash table and find a matching tuple.
 
 
+![hash join](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/hash_join.png)
+
 
 
 
