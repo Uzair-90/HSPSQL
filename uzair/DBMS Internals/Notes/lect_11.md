@@ -134,6 +134,49 @@ What if smaller table (S) is used as the outer table? * N + (n ∙ M) = 500 + (4
 
 ![nested block image](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/nested_block.png)
 
+In a traditional Nested Loop Join, for each row in the outer table, the entire inner table is 
+scanned sequentially to find matching rows. This can be very inefficient, especially when 
+dealing with large tables. The Block Nested Loop Join addresses this inefficiency by reading 
+and processing data in blocks (chunks) rather than row by row.
+
+This will readuce the number of I/O to the disk which can cause alot of overhead.
+
+The cost is now reduced to:
+
+M+(M.N) because we are not making an I/O for each tuple or row now we are making an I/O for 
+chunks only.
+
+The smaller table should be the outer table.
+We determine size based on the number of pages, not the number of tuples.
+
+Example database:
+* Table R: M = 1000, m = 100,000
+* TableS: N=500,n=40,000
+Cost Analysis:
+* M + (M ∙ N) = 1000 + (1000 ∙ 500) = 501,000 IOs
+* At 0.1 ms/IO, Total time ≈ 50 seconds
+
+What if we have B buffers available?
+* Use B-2 buffers for scanning the outer table.
+* Use one buffer for the inner table, one buffer for storing output.
+
+This algorithm uses B-2 buffers for scanning R.
+## Cost:
+M + ( [M / (B-2)] ∙ N)
+
+What if the outer relation completely fits in memory (B > M+2)?
+* Cost: M + N = 1000 + 500 = 1500 IOs
+* At 0.1ms/IO, Total time ≈ 0.15 seconds
+
+As we have discussed that Nested Loop Join algorithm is so bad so what is the solution for it?
+
+## Solution
+We can avoid sequential scans by using an index to find inner table matches.
+* Use an existing index for the join.
+
+
+
+
 
 
 
