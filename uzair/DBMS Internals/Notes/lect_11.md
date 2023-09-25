@@ -174,6 +174,8 @@ As we have discussed that Nested Loop Join algorithm is so bad so what is the so
 We can avoid sequential scans by using an index to find inner table matches.
 * Use an existing index for the join.
 
+![index_join](https://github.com/Uzair-90/practice/blob/master/uzair/DBMS%20Internals/index_join.png)
+
 
 
 
