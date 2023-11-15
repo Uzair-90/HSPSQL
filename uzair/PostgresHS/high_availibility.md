@@ -136,6 +136,76 @@ psql -p 9999 postgres
 ```
 Now create any random table with any attributes and note the pgpool log messages it will show that the command is executed on the primary node.
 
+After you established your connection to pgpool successfully you can see the log messages on pgpool window but if you want to redirect those log messages to some file use the following method this will redirect all the standard stream erros and logs to to a file created on desktop or you can also choose any other desination:
+
+```cmd
+pgpool -n > /Users/khan/desktop/pgpool.log 2>&1 & 
+```
+
+This will run pgpool in the fore-ground and will also redirect the messages to the file pgpool.log.
+
+
+## Configuring pgpool for failover
+
+If your master node fails then all your insert, update or delete queries will lost because the system will not consider them as they are only associated with master in this case we must make a standby or worker node as master or primary node.
+
+To make this go to your master db instance and type:
+
+```cmd
+nano postgresql.conf
+```
+Search for the synchronous_commit parameter and set it to remote apply.
+This process will make sure that the worker nodes will wait until the master has recieved all the select, update or delete queries and processed them. So, this will make sure that all the changes are visible to worker nodes.
+
+Also change the synchoronous_standby_names to * so that it can apply it to all possible worker nodes.
+
+After this we will set the wal_log_hints which is necessary to bring all the fail masters.
+Search for wal_log_hints and set it to on.
+Now just do a restart:
+
+```cmd
+pr_ctl -D . restart
+```
+Now to configure auto failover you will need a script that will take two or more arguments according the number of master and worker nodes that are connected for now we will consider that there is only one master node and one worker node use the following script for it:
+
+```cmd
+#!/bin/sh
+
+failed_node="$1"
+trigger_file="$2"
+
+if [ "$failed_node" = "1" ]; then
+  exit 0
+fi
+
+touch "$trigger_file"
+exit 0
+
+```
+This script is taking two command line arguments and checking whether the master node is failed or not on that basis it will decide to touch trigger file or not.
+
+To make configuration go to pgpool configuration file like:
+
+```cmd
+nano pgpool.conf
+```
+
+Inside this file search for failover_command and specify the location of the script that we created earlier.
+Do it like this:
+
+```cmd
+failover_command = '/Users/khan/desktop/failover.sh %d /Users/khan/desktop/replication/worker/down.trg'
+```
+The above command will create a file down.rig just save and exit.
+
+## Configuring postgresql worker or replica instance
+
+Chnage your working directory to replica instance and type:
+
+```cmd
+nano postgresql.conf
+```
+Now search for promote_trigger_file  and give the path of the created file.
 
 
 
