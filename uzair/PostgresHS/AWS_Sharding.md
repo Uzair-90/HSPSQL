@@ -4,11 +4,11 @@ In this section we will talk how can you do sharding on AWS by creating differen
 
 ## Creating EC2 instances
 
-I am assuming that the reader knows how to create EC2 instances. So, first of all create two EC2 instances in same security group then open the port range which you will be using to run postgresql databases. After doing this on each instance install postgresql and citus any version you are confortable with then in the configuration files change made the necessary changes which are required to establish connections you will find a detail about this at:
+I am assuming that the reader knows how to create EC2 instances. So, first of all create two EC2 instances in same security group then open the port range which you will be using to run postgresql databases. After doing this on each instance install postgresql and citus any version you are confortable with then in the configuration files made the necessary changes which are required to establish connections you will find details about this at:
 
 [citus distributed systems documentation](https://docs.citusdata.com/en/v11.1/installation/multi_node_rhel.html)
 
-After you are done with all the instructions given in the documentation provided above create your tables and start working your queries will run in parallel like for demo consider the following:
+After you are done with all the instructions given in the documentation ( link provided above) create your tables and start working. Your queries will run in parallel for a demo consider the following:
 
 ```sql
 CREATE TABLE distributed_table (
@@ -18,7 +18,7 @@ CREATE TABLE distributed_table (
 );
 
 ```
-In the above table postgres will use user_id as sharding key by default and if you want to check how to select your own key for sharding read the following documentation:
+In the above table postgres will use user_id as sharding key by default and if you want to know how to select your own key for sharding read the following documentation:
 
 [choosing sharding key](https://docs.citusdata.com/en/v11.3/sharding/data_modeling.html)
 
@@ -36,7 +36,7 @@ INSERT INTO distributed_table (name, email) VALUES
 
 ```
 
-Now after inserting the data query you database and your query will run in parrallel and will return you the results.
+Now after inserting the data query your database and your query will run in parrallel and will get the reults at coordinator node.
 
 ```txt
 postgres=# select * from distributed_table;
@@ -51,10 +51,10 @@ postgres=# select * from distributed_table;
 (6 rows)
 
 ```
-You will experience a good speed.
+You will experience a good execution speed.
 
 
-One last things that I would like to mention if you want to check the that your worker nodes are working successfully or not run the following query and check for the resuts.
+One last thing that I would like to mention if you want to check that your worker nodes are working successfully or not run the following query and check for the resuts.
 
 ```sql
 postgres=# SELECT * FROM citus_get_active_worker_nodes();
