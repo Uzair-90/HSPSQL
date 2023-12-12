@@ -54,7 +54,7 @@ postgres=# select * from distributed_table;
 You will experience a good execution speed.
 
 
-One last thing that I would like to mention if you want to check that your worker nodes are working successfully or not run the following query and check for the resuts.
+I would like to mention if you want to check that your worker nodes are working successfully or not run the following query and check for the resuts.
 
 ```sql
 postgres=# SELECT * FROM citus_get_active_worker_nodes();
@@ -65,4 +65,22 @@ postgres=# SELECT * FROM citus_get_active_worker_nodes();
 
 ```
 
-Right now I am using just 2 EC2 instances one as coordinator and one as worker my worker node is 3.92.47.79 and my dabtase port is 5432 which is clearly visible in the query result thank you that is all for this tutorial.
+Right now I am using just 2 EC2 instances one as coordinator and one as worker my worker node is 3.92.47.79 and my dabtase port is 5432 which is clearly visible in the query result.
+
+## Creating a sharded table 
+To shard a table use the following command in postgres:
+```sql
+SELECT create_distributed_table('distributed_table','user_id');
+
+```
+This will distribute your table into shards.
+
+Before the sharding the table query planning time was 0.5 ms and execution time was .890 ms but after sharding planning time was 00.12 ms but execution time was 0.025 ms so here you can see a clear different in the execution time.
+
+Running the same commands on my local machine results in execution time of 0.07 ms and planning time was 8.911 ms which is quite slow as compare to sharded tables.
+
+To check distributed table run the following command:
+
+```sql
+SELECT * FROM citus_shards;
+```
