@@ -31,6 +31,29 @@ Here I will talk a little abstractly because the overall process is a little len
 
 Our dataset is extensive, comprising a total of 60 million rows of information. We've carefully integrated a subset of 10 million rows sourced from Kaggle, a platform known for high-quality data shared by the data science community. The predominant portion, exceeding 50 million rows, originates from the IMDB non-commercial dataset, a comprehensive resource for movie-related information. This blend of curated excellence from Kaggle and the expansive details from IMDB forms the foundation for thorough analyses, providing a nuanced and comprehensive perspective within our dataset.
 
+# Set max_parallel_workers
+
+To optimize high-speed and parallel computation, we've configured our PostgreSQL setup with distinct settings for single-server and distributed environments. On the single server, we've empowered the system with eight parallel worker threads to efficiently process tasks concurrently. In the distributed setup, where we have both master and worker nodes, we've fine-tuned the configuration to enable four parallel threads on each individual node. This tailored approach ensures that our PostgreSQL deployment adapts seamlessly to the computing demands of both centralized and distributed computing scenarios, providing an optimal balance between performance and resource utilization.
+
+### For Single Server (Enable 8 parallel workers)
+```sql
+-- Set the maximum number of parallel workers
+ALTER SYSTEM SET max_parallel_workers = 8;
+
+-- Set the maximum number of parallel workers per gather operation
+ALTER SYSTEM SET max_parallel_workers_per_gather = 8;
+```
+
+### For Distributed Setup (Enable 4 parallel workers on each node)
+
+```sql
+-- Set the maximum number of parallel workers on each node
+ALTER SYSTEM SET max_parallel_workers = 4;
+
+-- Set the maximum number of parallel workers per gather operation on each node
+ALTER SYSTEM SET max_parallel_workers_per_gather = 4;
+
+```
 
 # Query Execution Plan Summary
 
