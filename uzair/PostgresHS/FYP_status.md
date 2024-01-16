@@ -1,3 +1,31 @@
+# What are we trying to do?
+
+Implementing data sharding using Citus on PostgreSQL involves horizontally partitioning large datasets across multiple nodes, enhancing scalability and performance in a distributed system. Citus, as a PostgreSQL extension, seamlessly integrates with the database engine to enable distributed database management through sharding.
+
+To begin, you choose a sharding key based on an attribute that dictates the distribution of data across nodes. This key is pivotal for ensuring an even distribution of data and optimizing query performance. Subsequently, you create tables as distributed tables, and Citus takes charge of distributing the data across shards on different nodes.
+
+Citus operates transparently to applications, allowing queries to be written in the same manner as with a traditional PostgreSQL database. Behind the scenes, Citus optimizes queries for parallel processing across distributed nodes, significantly improving performance and scalability.
+
+One notable advantage of using Citus is its streamlined integration with PostgreSQL, minimizing the need for application modifications. As queries are executed, Citus efficiently manages the distribution of data and optimizes the workload across nodes.
+
+Additionally, Citus provides robust monitoring and management tools, offering insights into the performance of distributed queries and the status of each shard. Through the implementation of data sharding with Citus on PostgreSQL, organizations can effectively manage large datasets, distribute workloads, and achieve enhanced performance in distributed environments.
+
+# Our Setup
+
+Our setup is a well-architected and balanced distributed system designed for optimal performance and scalability. At its core, we have a single-point server, featuring a robust 6th generation Core i7 processor and 4GB of RAM, ensuring high computing power for handling diverse workloads. Complementing this, our distributed server is a network of five computers, including one coordinator node responsible for load balancing and four worker nodes. Each worker node is equipped with 2nd generation Core i3 processors and 4GB of RAM, contributing to a distributed computing environment that efficiently processes tasks in parallel. This configuration leverages the strengths of the single-point server's formidable processing capabilities while harnessing the collective power of the distributed nodes for enhanced load balancing and workload distribution. The synergy between these components establishes a well-rounded setup capable of meeting the demands of modern computing, whether for complex calculations, data processing, or other resource-intensive tasks.
+
+![Failed to load image]()
+
+# Citus installation and distributed system setup.
+
+Here I will talk a little abstractly because the overall process is a little lengthy but you can always check this using citus and postgresql official documentation. In establishing a distributed system using Citus for PostgreSQL, begin by installing the Citus extension on your PostgreSQL database, following the official documentation for guidance. Once installed, configure the PostgreSQL settings by specifying the coordinator node's IP address and defining the shard range. Create worker nodes on separate computers by installing PostgreSQL and enabling the Citus worker settings in the configuration file. Establish connections between the coordinator and worker nodes using the master_add_node SQL command. Designate one of the worker nodes as the coordinator with the master_set_node_as_coordinator command. Distribute data across shards for parallel processing using the create_distributed_table command. After distribution, remove data from the coordinator node (Check documentation for this). Verify connected nodes using the master_get_active_worker_nodes query. Additional queries like citus_is_enabled and master_get_table_shard_count can be used to check Citus status and table distribution. Finally, monitor system performance with Citus management tools and PostgreSQL monitoring utilities. Adapt IP addresses, ports, and table names according to your specific configuration for a seamless Citus installation and distributed system setup.
+
+
+# Our dataset for testing single server and distributed server performance
+
+Our dataset is extensive, comprising a total of 60 million rows of information. We've carefully integrated a subset of 10 million rows sourced from Kaggle, a platform known for high-quality data shared by the data science community. The predominant portion, exceeding 50 million rows, originates from the IMDB non-commercial dataset, a comprehensive resource for movie-related information. This blend of curated excellence from Kaggle and the expansive details from IMDB forms the foundation for thorough analyses, providing a nuanced and comprehensive perspective within our dataset.
+
+
 # Query Execution Plan Summary
 
 This section provides a summary of the execution plans for various queries on both the single server and distributed server environments. Each table presents key metrics, such as execution time, planning time, and specific details from the query plans.
