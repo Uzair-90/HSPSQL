@@ -14,7 +14,7 @@ Additionally, Citus provides robust monitoring and management tools, offering in
 
 Our setup is a well-architected and balanced distributed system designed for optimal performance and scalability. At its core, we have a single-point server, featuring a robust 6th generation Core i7 processor and 4GB of RAM, ensuring high computing power for handling diverse workloads. Complementing this, our distributed server is a network of five computers, including one coordinator node responsible for load balancing and four worker nodes. Each worker node is equipped with 2nd generation Core i3 processors and 4GB of RAM, contributing to a distributed computing environment that efficiently processes tasks in parallel. This configuration leverages the strengths of the single-point server's formidable processing capabilities while harnessing the collective power of the distributed nodes for enhanced load balancing and workload distribution. The synergy between these components establishes a well-rounded setup capable of meeting the demands of modern computing, whether for complex calculations, data processing, or other resource-intensive tasks.
 
-![Failed to load image]()
+![Failed to load image](https://github.com/Uzair-90/HSPSQL/blob/master/uzair/PostgresHS/distributed_architecture.png)
 
 # Citus installation and distributed system setup.
 
