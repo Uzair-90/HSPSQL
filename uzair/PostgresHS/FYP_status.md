@@ -157,7 +157,7 @@ Following are the results after running the query on both of the servers:
 | Execution Time  | 7.67 seconds         | 242.63 seconds     |
 | Sort Method     | Quicksort            | Quicksort          |
 | Memory Usage    | 1.649 MB             | 2.177 MB           |
-| Task Count      | 20 (Parallel Tasks)  | Not applicable     |
+| Task Count      | 20 (Parallel Tasks)  | 8     |
 | Rows Processed  | 3,423                | 7,836              |
 | Planning Time   | 6.881 ms             | 12.628 ms          |
 
@@ -184,7 +184,7 @@ Following are the results of the above query on both servers:
 | Execution Time       | 4.35 hours         | 0.001 hours        |
 | Sort Method          | External merge     | Quicksort           |
 | Disk Usage           | 26.27 MB           | Memory: 25 kB       |
-| Parallel Workers     | 2                  | 20                  |
+| Parallel Workers     | 8                  | 20                  |
 | Rows Processed       | 460,554            | - (not explicitly provided in the EXPLAIN ANALYZE output) |
 | Planning Time        | 716.87 ms          | 12.08 ms            |
 
