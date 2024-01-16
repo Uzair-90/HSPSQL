@@ -250,6 +250,6 @@ Following are the distributed server results:
 | Seq Scan (tr)                  | Cost: 0.00, Actual Time: 0.017 ms, Rows: 42950            |
 
 ## Conclusion 
-Above table just show a basic comparison between single server and distributed systems on same dataset and same queries the results can clearly clearify it.
+Above table just show a basic comparison between single server and distributed systems on same dataset and same queries the results can clearly show the difference bwtween execution speed we are trying to furthure improve it and gain more efficiency and make this system implementation easy to use.
 
 
