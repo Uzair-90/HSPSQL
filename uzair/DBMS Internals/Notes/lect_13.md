@@ -47,13 +47,69 @@ The DBMS always know more than the OS.
 
 ## SQL Server SQLOS
 
-SQLOS is a user-level OS layer that runs inside of the DBMS and manages provisioned hardware resources. So, it was designed to create an abstraction layer for making sys calls like insted of doing system calls directly from the OS there should be a layer which will do this for user. This means that the user will contact the SQLOS and it will then do the system calls. It determines which tasks are scheduled on to which threads. Also manages I/O scheduling and higher level concepts like logical database locks.
+SQLOS is a user-level OS layer that runs inside of the DBMS and manages provisioned hardware resources. So, it was designed to create an abstraction layer for making sys calls like instead of doing system calls directly from the OS there should be a layer which will do this for user. This means that the user will contact the SQLOS and it will then do the system calls. It determines which tasks are scheduled on to which threads. Also manages I/O scheduling and higher level concepts like logical database locks.
 
 Non-preemptive thread scheduling through instrumented DBMS code.
 
 ```txt
 There are two types of scheduling: preemptive scheduling and non-preemptive scheduling. Preemptive scheduling allows a running process to be interrupted by a high priority process, whereas in non-preemptive scheduling, any new process has to wait until the running process finishes its CPU cycle.
 ```
+
+SQLOS quantum is 4 ms but the schedular cannot enforce that. This means we cannot interrupt any task in the middle like OS. You have to add explicit yield calls in the source code. Like if there is a query which may take more than 4 ms to execute and you don't the system to spend too much time on it like if it's unnecessary to complete execution then you can add explicit yield calls to terminate.
+
+### Yield Calls
+```txt
+The term "yield to call" refers to the return a bondholder receives if the security is held until the call date, prior to its date of maturity. Yield to call is applied to callable bonds, which are securities that let bond investors redeem the bonds (or the bond issuer to repurchase them) early, at the call price.
+```
+
+## Embedded DBMS
+
+DBMS runs inside the same address space as the application. The application itself is responsible for threads and scheduling. It is usually a light weighted DBMS like SQLite, level DB etc.
+
+## Advantages of multi threaded architecture
+
+* Less overhead per context switch.
+* Do not have to manage shared memory.
+
+The thread per worker does not mean that the system supports intra-query parallalisum.
+
+## Inter VS Intra-Query Parallelism
+
+### Inter-Query Parallalisum
+
+In this approach each worker in the system runs different query at a time.
+
+### Intra-Query Parallelism
+
+It executes the operations of a single query like one query is divided into sub queries and then the result is merged. Decreases latency for long-running queries like OLAP.
+
+## Typer of intra-query parallelism
+
+* Intra-Operator (Horizental)
+* Intra-Operator (Vertical)
+* Bushy
+
+### Intra-Operator (Horizental)
+
+Decompose operators into independant fragments that perform the same function on different subsets of data.
+The DBMS inserts a new operator called exchange into the query plan to coalesce/split results from multiple children/parent operators.
+Postgres call this "gather".
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
