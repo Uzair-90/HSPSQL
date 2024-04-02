@@ -1,1 +1,0 @@
-initializing PostgreSQL directory
