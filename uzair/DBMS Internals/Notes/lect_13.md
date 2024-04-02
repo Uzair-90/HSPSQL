@@ -86,7 +86,7 @@ It executes the operations of a single query like one query is divided into sub 
 ## Typer of intra-query parallelism
 
 * Intra-Operator (Horizental)
-* Intra-Operator (Vertical)
+* Inter-Operator (Vertical)
 * Bushy
 
 ### Intra-Operator (Horizental)
@@ -95,11 +95,58 @@ Decompose operators into independant fragments that perform the same function on
 The DBMS inserts a new operator called exchange into the query plan to coalesce/split results from multiple children/parent operators.
 Postgres call this "gather".
 
+### Typer of exhange operator
 
- 
+There are three different types of exhange operators which are following.
+![Image of exchange operator not visible](https://github.com/Uzair-90/HSPSQL/blob/master/uzair/DBMS%20Internals/exhange_op_types.png)
+
+### Inter-Operator (Vertical)
+
+Operations are overlapped in order to pipeline data from one stage to another without materialization. In this approach different parts or segments of a query plan are assigned to different workers which work continuesly in a pipeline.
+We use this approach for continues data like streaming data where one operator gets continues input and provide continues output to the next oeprator.
+
+This approach is also called pipeline parallelism.
+
+## Bushy Appraoch 
+
+It's a combination of both intra and inter operators and it also needs exchange operators to coalsce results from different workers.
 
 
+## Observation
 
+Using additional processes/threads to execute queries in parallel will not help in reducing execution time if disk is the main bottleneck.
+It may reduce the performance of DBMS worst sometime if worker is accessing different parts of the disk at once. 
+
+## I/O parallelism
+
+In this approach we divide the storage into multiple storage devices instead of one to improve disk bandwidth latency. Some of the approaches are:
+
+* Multiple disks per database.
+* One database per disk.
+* One relation per disk.
+* Split relation across multiple disks.
+
+## Multi-Disk parallelism
+
+You have to configure OS/Hardware to store the DBMS files across multiple storage devices.
+* Storage appliances
+* RAID configuration
+
+This is transparent to the DBMS.
+
+RAID
+```txt
+RAID (Redundant Array of Independent Disks) configuration is a way to combine multiple hard disk drives (HDDs) or solid-state drives (SSDs) into a single logical unit.
+```
+
+## Database Partitioning
+
+Some DBMS allow you to specify the disk location of each indivisual database. The buffer pool manager will map the page to its location.
+
+# Partitioning
+
+Split single logical table into disjoint physical segments that are stored and managed seperately.
+The partitions should logically be transparent to the application. The application should only access logical tables and should not worry how they are stored at physical level.
 
 
 
