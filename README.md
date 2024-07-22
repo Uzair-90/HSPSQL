@@ -1,4 +1,4 @@
-# HSPSQL
+## HSPSQL
 
 This repo includes everything that I have done related to databases.
 
